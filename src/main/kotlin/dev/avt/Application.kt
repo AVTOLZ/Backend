@@ -18,4 +18,5 @@ fun Application.module() {
     configureDatabases()
     configureSockets()
     configureRouting()
+    configureBearer()
 }

@@ -1,5 +1,6 @@
 package dev.avt.plugins
 
+import dev.avt.routing.authentication
 import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
@@ -31,6 +32,8 @@ fun Application.configureRouting() {
         static("/static") {
             resources("static")
         }
+
+        authentication()
     }
 }
 

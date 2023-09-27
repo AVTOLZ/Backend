@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.Database
 
 fun Application.configureDatabases() {
     val database = Database.connect(
-        url = "jdbc:mariadb://localhost:3306/main",
+        url = "jdbc:mariadb://86.83.65.7:3306/main",
         user = "dev",
         driver = "org.mariadb.jdbc.Driver",
         password = "dev"

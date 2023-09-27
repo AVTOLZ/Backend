@@ -17,7 +17,7 @@ data class AVTUser(
     val lastName: String?,
     val studentId: Int?
 )
-class UserService(private val database: Database) {
+class UserService(database: Database) {
     object Users : Table() {
         val id = integer("id").autoIncrement()
         val username = varchar("username", 50)

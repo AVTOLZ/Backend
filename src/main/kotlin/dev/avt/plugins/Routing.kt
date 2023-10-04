@@ -1,5 +1,6 @@
 package dev.avt.plugins
 
+import dev.avt.api.accounts.accountRouting
 import dev.avt.routing.authentication
 import io.ktor.resources.*
 import io.ktor.server.application.*
@@ -16,24 +17,7 @@ fun Application.configureRouting() {
     install(DoubleReceive)
     install(Resources)
     routing {
-        get("/") {
-            call.respondText("Hello World!")
-        }
-        post("/double-receive") {
-            val first = call.receiveText()
-            val theSame = call.receiveText()
-            call.respondText(first + " " + theSame)
-        }
-        get<Articles> { article ->
-            // Get all articles ...
-            call.respond("List of articles sorted starting from ${article.sort}")
-        }
-        // Static plugin. Try to access `/static/index.html`
-        static("/static") {
-            resources("static")
-        }
-
-        authentication()
+        accountRouting()
     }
 }
 

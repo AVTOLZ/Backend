@@ -17,8 +17,10 @@ fun Application.configureDatabases() {
         driver = "org.mariadb.jdbc.Driver",
         password = "AVT123456!!"
     )
+
     val userService = UserService(database)
     val bearerService = BearerService(database)
+
     UserService.INSTANCE = userService
     BearerService.INSTANCE = bearerService
 }

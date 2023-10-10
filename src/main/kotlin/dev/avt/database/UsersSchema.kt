@@ -25,7 +25,7 @@ class AVTUser(id: EntityID<Int>) : IntEntity(id), Principal {
 
 class UserService(database: Database) {
     object Users : IntIdTable() {
-        val username = varchar("username", 50)
+        val username = varchar("username", 50).uniqueIndex()
         val password = char("password", 128)
         val email = varchar("email", 50).nullable()
         val firstName = varchar("first_name", 50).nullable()

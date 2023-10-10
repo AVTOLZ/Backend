@@ -1,0 +1,72 @@
+openapi: 3.0.3
+info:
+  title: AVT Server API Spec
+  version: 1.0.0
+  description: ''
+  x-logo:
+    url: ''
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/accounts/login:
+    post:
+      requestBody:
+        $ref: '#/components/requestBodies/LoginRequest'
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/LoginResponse'
+      operationId: login
+      summary: Login with username and password
+    x-last-modified: 1696958819657
+components:
+  responses:
+    LoginResponse:
+      content:
+        application/json:
+          schema:
+            required:
+              - token
+            type: object
+            properties:
+              token:
+                description: >-
+                  An 256 character bearer token that can be used for future
+                  requests.
+                type: string
+      x-last-modified: 1696959932471
+      description: >-
+        Response given to the client on successful login request. Contains
+        bearer token.
+  requestBodies:
+    LoginRequest:
+      content:
+        application/json:
+          schema:
+            description: The login data (username, password) for the user trying to login.
+            required:
+              - username
+              - password
+            type: object
+            properties:
+              username:
+                description: The user's username
+                type: string
+              password:
+                description: The user's password
+                type: string
+      required: false
+      x-last-modified: 1696959731435
+  securitySchemes:
+    Login Token:
+      scheme: bearer
+      type: http
+      description: >-
+        You receive this token to validate your user session when logging in. It
+        can be used for making protected requests.
+      x-last-modified: 1696958792183
+  schemas: {}
+  headers: {}
+  parameters: {}
+tags: []
+security: []

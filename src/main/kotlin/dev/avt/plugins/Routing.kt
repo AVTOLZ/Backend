@@ -1,6 +1,7 @@
 package dev.avt.plugins
 
 import dev.avt.api.accounts.accountRouting
+import dev.avt.api.apiRouting
 import dev.avt.routing.authentication
 import io.ktor.resources.*
 import io.ktor.server.application.*
@@ -17,7 +18,7 @@ fun Application.configureRouting() {
     install(DoubleReceive)
     install(Resources)
     routing {
-        accountRouting()
+        apiRouting()
     }
 }
 

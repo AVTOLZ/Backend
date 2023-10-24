@@ -44,15 +44,7 @@ class BearerService(database: Database) {
     suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }
 
-
-
     companion object {
         lateinit var INSTANCE: BearerService
-
-        fun find(id: Int) = Bearer.select { Bearer.id eq id }.map { result ->
-            BearerToken(result[Bearer.id]).also {
-                it.bearerToken = result[Bearer.bearerToken]
-            }
-        }.single()
     }
 }

@@ -25,17 +25,6 @@ fun Application.configureDatabases() {
     val userService = UserService(database)
     val bearerService = BearerService(database)
 
-    transaction(database) {
-        AVTUser.new {
-            this.userName = "user"
-            this.password = "password"
-            this.email = "email"
-            this.firstName = "firstName"
-            this.lastName = "lastName"
-            this.studentId = 1
-        }
-    }
-
     UserService.INSTANCE = userService
     BearerService.INSTANCE = bearerService
 }

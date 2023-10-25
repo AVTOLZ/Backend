@@ -1,10 +1,11 @@
 package dev.avt.api.accounts.login
 
-import dev.avt.database.AVTUser
-import dev.avt.database.UserService
+import dev.avt.database.*
+import dev.avt.database.UserService.Users.id
 import dev.avt.database.UserService.Users.password
 import dev.avt.database.UserService.Users.username
-import dev.avt.database.createBearerToken
+import dev.tiebe.magisterapi.api.account.LoginFlow
+import dev.tiebe.magisterapi.api.account.ProfileInfoFlow
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -36,6 +37,35 @@ fun Routing.loginRoutes() {
             user.createBearerToken()
         }
 
-        call.respond(HttpStatusCode.OK, LoginResponse(bearer))
+        call.respond(HttpStatusCode.OK, LoginResponse(user.id.value, bearer))
+    }
+
+    post("/api/accounts/login/magister") {
+        val refreshToken = call.receiveText()
+
+        val magisterTokens = LoginFlow.refreshToken(refreshToken)
+
+        val tenantUrl = ProfileInfoFlow.getTenantUrl(magisterTokens.accessToken)
+        val profileInfo = ProfileInfoFlow.getProfileInfo(tenantUrl.toString(), magisterTokens.accessToken)
+
+        val studyInfo = ProfileInfoFlow.getStudyInfo(tenantUrl.toString(), magisterTokens.accessToken, profileInfo.person.id)
+
+        val user = transaction {
+            AVTUser.find {
+                UserService.Users.studentId eq studyInfo.stamNr.toIntOrNull()
+            }.firstOrNull()
+        }
+
+        if (user == null) {
+            call.respond(HttpStatusCode.Unauthorized)
+            return@post
+        }
+
+
+        val bearer = transaction {
+            user.createBearerToken()
+        }
+
+        call.respond(HttpStatusCode.OK, LoginResponse(user.id.value, bearer))
     }
 }

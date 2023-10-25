@@ -10,6 +10,7 @@ import dev.tiebe.magisterapi.utils.MagisterException
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -18,11 +19,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
 fun Routing.linkRouting() {
-    // TODO - tiebe: how does this work? (variables in definition)
-    route("/api/person/%s/magister") {
+    route("/api/person/{personId}/magister") {
         authenticate("auth-bearer") {
             post {
-                val personId = 0 // todo
+                val personId = call.parameters["personId"]?.toIntOrNull() ?: return@post
                 val user = call.principal<AVTUser>()
 
                 if (user == null) {
@@ -30,11 +30,11 @@ fun Routing.linkRouting() {
                     return@post
                 }
 
-                //todo: maybe only receive refresh token? don't need anything else, and saves data
-                var magisterTokens = TokenResponse("abcd", "abcd", "abcd", "abcd", 1000L, "abcdef") // todo - tiebe: retrieve tokenresponse from post body
+                val refreshToken = call.receiveText()
+
                 try {
                     // try to sign in and retrieve some basic user data. if that succeeds, the login info is valid.
-                    magisterTokens = LoginFlow.refreshToken(magisterTokens.refreshToken)
+                    val magisterTokens = LoginFlow.refreshToken(refreshToken)
 
                     val tenantUrl = ProfileInfoFlow.getTenantUrl(magisterTokens.accessToken)
                     val profileInfo = ProfileInfoFlow.getProfileInfo(tenantUrl.toString(), magisterTokens.accessToken)

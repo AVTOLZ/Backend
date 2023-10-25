@@ -13,8 +13,10 @@ class AVTUser(id: EntityID<Int>) : IntEntity(id), Principal {
     var firstName by UserService.Users.firstName
     var lastName by UserService.Users.lastName
     var studentId by UserService.Users.studentId
+
+    var state by UserService.Users.state
 }
 
-fun AVTUser.linkMagisterAccount() {
-
+enum class UserState {
+    UNVERIFIED, VERIFIED, DISABLED
 }

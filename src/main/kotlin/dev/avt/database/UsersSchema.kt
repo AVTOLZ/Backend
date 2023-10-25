@@ -21,6 +21,8 @@ class UserService(database: Database) {
         val firstName = varchar("first_name", 50).nullable()
         val lastName = varchar("last_name", 50).nullable()
         val studentId = integer("student_id").nullable()
+
+        val state = enumeration<UserState>("state").default(UserState.UNVERIFIED)
     }
 
     init {

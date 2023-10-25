@@ -31,6 +31,9 @@ fun Routing.registerRoutes() {
             }
         }
 
+        // send verification code to email
+
+
         val bearer = transaction {
             user.createBearerToken()
         }

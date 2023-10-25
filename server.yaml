@@ -1,0 +1,126 @@
+openapi: 3.0.3
+info:
+  title: AVT Server API Spec
+  version: 1.0.0
+  description: ''
+  x-logo:
+    url: ''
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/accounts/login:
+    post:
+      requestBody:
+        $ref: '#/components/requestBodies/LoginRequest'
+      tags: []
+      responses:
+        '200':
+          $ref: '#/components/responses/LoginResponse'
+        '401':
+          description: Invalid login information
+          x-last-modified: 1698161104790
+      operationId: login
+      summary: Login with username and password
+    x-last-modified: 1696958819657
+  /api/person/{personId}/magister:
+    summary: Magister link information
+    post:
+      requestBody:
+        $ref: '#/components/requestBodies/MagisterLink'
+      tags: []
+      parameters:
+        - $ref: '#/components/parameters/personId'
+          name: personId
+          x-last-modified: 1698160644141
+      security:
+        - LoginToken: []
+      responses:
+        '200':
+          description: Refresh token was valid and item was saved
+          x-last-modified: 1698160950849
+        '400':
+          description: refreshToken was invalid
+          x-last-modified: 1698161038857
+      operationId: linkMagister
+      summary: Link Magister account to user
+    parameters:
+      - $ref: '#/components/parameters/personId'
+        name: personId
+        x-last-modified: 1698160567358
+    x-last-modified: 1698160454673
+components:
+  responses:
+    LoginResponse:
+      content:
+        application/json:
+          schema:
+            required:
+              - token
+            type: object
+            properties:
+              token:
+                description: >-
+                  An 256 character bearer token that can be used for future
+                  requests.
+                type: string
+      description: >-
+        Response given to the client on successful login request. Contains
+        bearer token.
+      x-last-modified: 1696959932471
+  parameters:
+    personId:
+      deprecated: false
+      example: '123456'
+      name: Person ID
+      description: Person ID of the user
+      schema:
+        type: string
+      in: path
+      required: true
+      x-last-modified: 1698160549283
+  requestBodies:
+    LoginRequest:
+      content:
+        application/json:
+          schema:
+            description: The login data (username, password) for the user trying to login.
+            required:
+              - username
+              - password
+            type: object
+            properties:
+              username:
+                description: The user's username
+                type: string
+              password:
+                description: The user's password
+                type: string
+      required: false
+      x-last-modified: 1696959731435
+    MagisterLink:
+      description: The information about the Magister Link
+      content:
+        application/json:
+          schema:
+            required:
+              - refreshToken
+            type: object
+            properties:
+              refreshToken:
+                description: The active refresh token for the user
+                type: string
+      required: true
+      x-last-modified: 1698160780542
+  securitySchemes:
+    LoginToken:
+      scheme: bearer
+      type: http
+      description: >-
+        You receive this token to validate your user session when logging in. It
+        can be used for making protected requests.
+      x-last-modified: 1698161578249
+      bearerFormat: ''
+  schemas: {}
+  headers: {}
+tags: []
+security: []

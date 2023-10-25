@@ -11,7 +11,7 @@ fun Application.configureSecurity() {
         bearer("auth-bearer") {
             realm = "MainRealm"
             authenticate { tokenCredential ->
-                //find all tokens that match the user supplied token
+                //find all tokens that match the user supplied token, and Koen was here
                 val foundItems = BearerToken.find { BearerService.Bearer.bearerToken eq tokenCredential.token }
 
                 return@authenticate foundItems.firstOrNull()?.user

@@ -11,6 +11,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
+
+// this function returns all permissions the user has
 fun Routing.readPermissionsRoutes(){
     route("/api/person/{personId}/perms") {
         authenticate("auth-bearer") {

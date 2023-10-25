@@ -11,6 +11,9 @@ import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
+// This is the database table containing the permissions of all users
+// It's also one of the reasons I want to commit die
+
 class PermissionList(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<PermissionList>(PermissionService.Permissions)
     var user by AVTUser referencedOn PermissionService.Permissions.user

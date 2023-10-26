@@ -1,12 +1,9 @@
 package dev.avt.api.person.absentie.availability
 
-import dev.avt.database.AVTUser
+import dev.avt.database.*
 import dev.avt.database.AvailableHoursService.AvailableHours.endTime
-import dev.avt.database.AvailableHoursTable
 import dev.avt.database.RequestedHoursService.RequestedHours.hour
 import dev.avt.database.RequestedHoursService.RequestedHours.user
-import dev.avt.database.RequestedHoursTable
-import dev.avt.database.ge
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -51,17 +48,9 @@ fun Routing.readAvailabilityRoutes(){
 
                 remainingHours.forEach {
                     if (reqUser.rank.ge(it.requiredRank)) {
-                        val alreadyRegisteredHour = transaction {
-                            RequestedHoursTable.find { (user eq reqUser.id.value) and (hour eq it.id.value) }.firstOrNull()
-                        }
+                        val hourInQuestionStatus = checkHourStatus(reqUser, it)
 
-                        var alreadyRegistered: Boolean = false
-
-                        if (alreadyRegisteredHour != null) {
-                            alreadyRegistered = true
-                        }
-
-                        allowedHours + HourDataFormat(it.id.value, it.startTime, it.endTime, alreadyRegistered)
+                        allowedHours + HourDataFormat(it.id.value, it.startTime, it.endTime, hourInQuestionStatus)
                     }
                 }
 
@@ -76,4 +65,22 @@ fun Routing.readAvailabilityRoutes(){
     }
 }
 
+fun checkHourStatus(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): HourStatus {
+    val approvedCheckThing = transaction {
+        ApprovedHoursTable.find { (user eq reqUser.id.value) and (hour eq hourInQuestion.id.value) }.firstOrNull()
+    }
 
+    if (approvedCheckThing != null) {
+        return HourStatus.Approved
+    }
+
+    val requestedCheckThing = transaction {
+        RequestedHoursTable.find { (user eq reqUser.id.value) and (hour eq hourInQuestion.id.value) }.firstOrNull()
+    }
+
+    if (requestedCheckThing != null) {
+        return HourStatus.Requested
+    }
+
+    return  HourStatus.Open
+}

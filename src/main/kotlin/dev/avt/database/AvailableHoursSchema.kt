@@ -42,6 +42,11 @@ class AvailableHoursService(database: Database) {
     }
 }
 
+enum class HourStatus(val order: Int) {
+    Open(0),
+    Requested(1),
+    Approved(2)
+}
 
 // this is sample code written by Tiebe for use as reference and is NOT meant to be used
 fun test() {

@@ -19,7 +19,6 @@ fun Routing.readAvailabilityRoutes(){
                 val reqUser = call.principal<AVTUser>()
                 val personId = call.parameters["personId"]?.toIntOrNull() ?: return@get
 
-
                 if (reqUser == null) {
                     call.respond(HttpStatusCode.Unauthorized)
                     return@get
@@ -42,14 +41,14 @@ fun Routing.readAvailabilityRoutes(){
                     return@get
                 }
 
-                // TODO come up with a better system to send this data to the user
+                // TODO come up with a better system to send this data to the user (would sending the id of the event as an int be a good idea?)
                 // also one of the main dissadvatages of an ide is that rn in vibing on the couch with my dog and my laptop on my lap, and dayum this thing is HOT
                 // also also my dog took the spot i was sitting
-                val allowedHours: Array<String> = emptyArray()
+                val allowedHours: Array<Int> = emptyArray()
 
                 remainingHours.forEach {
                     if (reqUser.rank.ge(it.requiredRank)) {
-                        allowedHours + it.toString()
+                        allowedHours + it.id.value
                     }
                 }
 

@@ -41,7 +41,7 @@ fun Routing.readAvailabilityRoutes(){
                     return@get
                 }
 
-                // TODO come up with a better system to send this data to the user (would sending the id of the event as an int be a good idea?)
+                // TODO add system to show user if they already are registered for an hour
                 // also one of the main dissadvatages of an ide is that rn in vibing on the couch with my dog and my laptop on my lap, and dayum this thing is HOT
                 // also also my dog took the spot i was sitting
                 val allowedHours: Array<HourDataFormat> = emptyArray()

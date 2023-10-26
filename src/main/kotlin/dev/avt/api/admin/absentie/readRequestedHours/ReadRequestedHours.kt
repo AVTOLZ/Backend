@@ -1,6 +1,5 @@
 package dev.avt.api.admin.absentie.readRequestedHours
 
-import dev.avt.api.admin.absentie.approveHours.HoursRequestedDataFormat
 import dev.avt.database.AVTUser
 import dev.avt.database.RequestedHoursTable
 import io.ktor.http.*

@@ -1,4 +1,4 @@
-package dev.avt.api.admin.absentie.readRequestedHours
+package dev.avt.api.admin.absence.readRequestedHours
 
 import kotlinx.serialization.Serializable
 

@@ -1,4 +1,4 @@
-package dev.avt.api.person.absentie.availability
+package dev.avt.api.person.absence.availability
 
 import dev.avt.database.*
 import dev.avt.database.AvailableHoursService.AvailableHours.endTime

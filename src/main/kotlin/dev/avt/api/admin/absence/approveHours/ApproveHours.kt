@@ -1,4 +1,4 @@
-package dev.avt.api.admin.absentie.approveHours
+package dev.avt.api.admin.absence.approveHours
 
 import dev.avt.database.AVTUser
 import dev.avt.database.ApprovedHoursTable

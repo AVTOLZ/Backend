@@ -1,4 +1,4 @@
-package dev.avt.api.person.absentie.requestHours
+package dev.avt.api.person.absence.requestHours
 
 import dev.avt.database.*
 import io.ktor.http.*

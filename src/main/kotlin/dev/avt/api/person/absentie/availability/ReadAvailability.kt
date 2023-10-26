@@ -57,7 +57,7 @@ fun Routing.readAvailabilityRoutes(){
                     return@get
                 }
 
-                call.respond(HttpStatusCode.OK, ReadAvailabilityResponse(allowedHours))
+                call.respond(HttpStatusCode.OK, ReadAvailabilityResponse(allowedHours.toList()))
             }
         }
     }

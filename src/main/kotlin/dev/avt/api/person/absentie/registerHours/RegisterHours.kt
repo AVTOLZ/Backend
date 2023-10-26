@@ -34,7 +34,7 @@ fun Routing.registerHours(){
                     return@post
                 }
 
-                val requestedHours: List<AvailableHoursTable> = emptyList()
+                val requestedHours: Array<AvailableHoursTable> = emptyArray()
 
                 body.hours.forEach {
                     val hourInQuestion = AvailableHoursTable[it]

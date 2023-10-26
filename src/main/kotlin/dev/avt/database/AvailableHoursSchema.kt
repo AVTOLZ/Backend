@@ -43,7 +43,7 @@ class AvailableHoursService(database: Database) {
 }
 
 
-
+// this is sample code written by Tiebe for use as reference and is NOT meant to be used
 fun test() {
     val date = Clock.System.now()
 

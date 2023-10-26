@@ -20,16 +20,20 @@ fun AVTUser.linkMagisterAccount() {
 
 }
 
+// this is currently mainly used for easily checking if a user is allowed to attend a certain thing based on rank
 enum class AVTRanks(val order: Int) {
     Brugger(0),
     PlannenLid(1),
     Hoofd(2)
 }
 
+// this is a function to easily check if a users rank is sufficient for an event
+// for usage example see ReadAvailability.kt
 fun AVTRanks.ge(other: AVTRanks): Boolean {
     return this.order >= other.order
 }
 
+// this is sample code written by Tiebe for use as reference and is NOT meant to be used
 fun main() {
     val test = AVTRanks.Hoofd
 

@@ -42,6 +42,9 @@ fun Routing.readAvailabilityRoutes(){
                     return@get
                 }
 
+                //TODO come up with a better system to send this data to the user
+                // also one of the main dissadvatages of an ide is that rn in vibing on the couch with my dog and my laptop on my lap, and dayum this thing is HOT
+                // also also my dog took the spot i was sitting
                 val allowedHours: Array<String> = emptyArray()
 
                 remainingHours.forEach {

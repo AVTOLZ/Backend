@@ -1,4 +1,4 @@
-package dev.avt.api.person.absentie.registerHours
+package dev.avt.api.person.absentie.requestHours
 
 import dev.avt.database.*
 import io.ktor.http.*
@@ -7,17 +7,14 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.Objects
 
-fun Routing.registerHours(){
-    route("/api/person/{personId}/submit_hours") {
+fun Routing.requestHours(){
+    route("/api/person/{personId}/request_hours") {
         authenticate("auth-bearer") {
             post {
                 val reqUser = call.principal<AVTUser>()
                 val personId = call.parameters["personId"]?.toIntOrNull() ?: return@post
-                val body = call.receive<RegisterHoursRequest>()
+                val body = call.receive<RequestHoursRequest>()
 
                 if (reqUser == null) {
                     call.respond(HttpStatusCode.Unauthorized)
@@ -34,7 +31,7 @@ fun Routing.registerHours(){
                     return@post
                 }
 
-                val requestedHours: Array<AvailableHoursTable> = emptyArray()
+                val requestHours: Array<AvailableHoursTable> = emptyArray()
 
                 body.hours.forEach {
                     val hourInQuestion = AvailableHoursTable[it]
@@ -42,16 +39,16 @@ fun Routing.registerHours(){
                         call.respond(HttpStatusCode.Forbidden)
                         return@post
                     }
-                    requestedHours + hourInQuestion
+                    requestHours + hourInQuestion
                 }
 
-                if (requestedHours.isEmpty()) {
+                if (requestHours.isEmpty()) {
                     call.respond(HttpStatusCode.NotFound)
                     return@post
                 }
 
-                requestedHours.forEach {
-                    RegisteredHoursTable.new {
+                requestHours.forEach {
+                    RequestedHoursTable.new {
                         user = reqUser
                         hour = it
                     }

@@ -3,9 +3,9 @@ package dev.avt.api.person.absentie.availability
 import dev.avt.database.AVTUser
 import dev.avt.database.AvailableHoursService.AvailableHours.endTime
 import dev.avt.database.AvailableHoursTable
-import dev.avt.database.RegisteredHoursService.RegisteredHours.hour
-import dev.avt.database.RegisteredHoursService.RegisteredHours.user
-import dev.avt.database.RegisteredHoursTable
+import dev.avt.database.RequestedHoursService.RequestedHours.hour
+import dev.avt.database.RequestedHoursService.RequestedHours.user
+import dev.avt.database.RequestedHoursTable
 import dev.avt.database.ge
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -52,7 +52,7 @@ fun Routing.readAvailabilityRoutes(){
                 remainingHours.forEach {
                     if (reqUser.rank.ge(it.requiredRank)) {
                         val alreadyRegisteredHour = transaction {
-                            RegisteredHoursTable.find { (user eq reqUser.id.value) and (hour eq it.id.value) }.firstOrNull()
+                            RequestedHoursTable.find { (user eq reqUser.id.value) and (hour eq it.id.value) }.firstOrNull()
                         }
 
                         var alreadyRegistered: Boolean = false

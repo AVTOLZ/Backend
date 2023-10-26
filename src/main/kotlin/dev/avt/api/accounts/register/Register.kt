@@ -1,10 +1,12 @@
 package dev.avt.api.accounts.register
 
+import dev.avt.Email
 import dev.avt.api.accounts.login.LoginRequest
 import dev.avt.api.accounts.login.LoginResponse
 import dev.avt.database.AVTUser
 import dev.avt.database.UserService
 import dev.avt.database.UserService.Users.username
+import dev.avt.database.UserState
 import dev.avt.database.createBearerToken
 import dev.tiebe.magisterapi.api.account.LoginFlow
 import dev.tiebe.magisterapi.api.account.ProfileInfoFlow
@@ -16,6 +18,8 @@ import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
+
+val verificationCodes = mutableMapOf<Int, Int>()
 
 fun Routing.registerRoutes() {
     post("/api/accounts/register") {
@@ -31,13 +35,23 @@ fun Routing.registerRoutes() {
             }
         }
 
-        // send verification code to email
+        verificationCodes[user.id.value] = (100000..999999).random()
+
+        Email.sendMail(body.email, "Welcome to AVT!", """
+            Hello ${user.firstName},
+            
+            Welcome to AVT!
+            
+            Your username is: ${user.userName}
+            
+            Please enter the following code to verify your account: ${verificationCodes[user.id.value]}
+        """.trimIndent())
 
 
         val bearer = transaction {
             user.createBearerToken()
         }
 
-        call.respond(HttpStatusCode.OK, LoginResponse(user.id.value, bearer))
+        call.respond(HttpStatusCode.OK, LoginResponse(user.id.value, bearer, user.state == UserState.UNVERIFIED))
     }
 }

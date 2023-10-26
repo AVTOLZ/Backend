@@ -60,7 +60,7 @@ fun Routing.registerHours(){
                 call.respond(HttpStatusCode.OK)
 
                 // TODO ask tiebe how to add shit to server.yaml
-                // note to self, I honestly fear testing and debugging this code for bugs :)
+                // note to self: I honestly fear testing and debugging this code for bugs :)
             }
         }
     }

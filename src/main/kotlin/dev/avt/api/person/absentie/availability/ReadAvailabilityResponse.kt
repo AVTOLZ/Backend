@@ -2,7 +2,8 @@ package dev.avt.api.person.absentie.availability
 
 import kotlinx.serialization.Serializable
 
-
-// TODO this isnt sending enough data yet, it needs start and end time
 @Serializable
-data class ReadAvailabilityResponse(val hours: Array<Int>)
+data class ReadAvailabilityResponse(val hours: Array<HourDataFormat>)
+
+@Serializable
+data class HourDataFormat(val id: Int, val startTime: Long, val endTime: Long)

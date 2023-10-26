@@ -44,11 +44,11 @@ fun Routing.readAvailabilityRoutes(){
                 // TODO come up with a better system to send this data to the user (would sending the id of the event as an int be a good idea?)
                 // also one of the main dissadvatages of an ide is that rn in vibing on the couch with my dog and my laptop on my lap, and dayum this thing is HOT
                 // also also my dog took the spot i was sitting
-                val allowedHours: Array<Int> = emptyArray()
+                val allowedHours: Array<HourDataFormat> = emptyArray()
 
                 remainingHours.forEach {
                     if (reqUser.rank.ge(it.requiredRank)) {
-                        allowedHours + it.id.value
+                        allowedHours + HourDataFormat(it.id.value, it.startTime, it.endTime)
                     }
                 }
 
@@ -62,3 +62,5 @@ fun Routing.readAvailabilityRoutes(){
         }
     }
 }
+
+

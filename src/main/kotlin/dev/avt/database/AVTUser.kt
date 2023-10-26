@@ -26,8 +26,8 @@ enum class AVTRanks(val order: Int) {
     Hoofd(2)
 }
 
-fun AVTRanks.ge(other: AVTRanks) {
-    this.order >= other.order
+fun AVTRanks.ge(other: AVTRanks): Boolean {
+    return this.order >= other.order
 }
 
 fun main() {

@@ -9,13 +9,18 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun Routing.loginRoutes() {
+fun Routing.verificationRoutes() {
     post("/api/accounts/verify") {
         val code = call.parameters["code"]?.toIntOrNull() ?: return@post call.respond(HttpStatusCode.BadRequest)
         val personId = call.parameters["id"]?.toIntOrNull()  ?: return@post call.respond(HttpStatusCode.BadRequest)
 
         val user = transaction {
-            AVTUser[personId]
+            AVTUser.findById(personId)
+        }
+
+        if (user == null) {
+            call.respond(HttpStatusCode.NotFound)
+            return@post
         }
 
         if (code != verificationCodes[user.id.value]) {
@@ -25,5 +30,7 @@ fun Routing.loginRoutes() {
         transaction {
             user.state = UserState.VERIFIED
         }
+
+        call.respond(HttpStatusCode.OK)
     }
 }

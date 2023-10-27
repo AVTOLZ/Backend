@@ -36,7 +36,7 @@ class MagisterDataService(database: Database) {
     }
     init {
         transaction(database) {
-            SchemaUtils.create(MagisterTable)
+            SchemaUtils.createMissingTablesAndColumns(MagisterTable)
         }
     }
 

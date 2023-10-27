@@ -16,7 +16,7 @@ lateinit var database: Database
 
 fun Application.configureDatabases() {
     database = Database.connect(
-        url = "jdbc:mariadb://192.168.1.12:3306/main",
+        url = "jdbc:mariadb://86.83.65.7:3306/main",
         user = "dev",
         driver = "org.mariadb.jdbc.Driver",
         password = "AVT123456!!"

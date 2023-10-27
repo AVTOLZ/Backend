@@ -25,6 +25,7 @@ class MagisterData(id: EntityID<Int>) : IntEntity(id) {
 }
 
 class MagisterDataService(database: Database) {
+
     object MagisterTable : IntIdTable() {
         val accessToken = varchar("access_token", 256)
         val refreshToken = varchar("refresh_token", 256)
@@ -34,6 +35,7 @@ class MagisterDataService(database: Database) {
 
         val user = reference("user", UserService.Users)
     }
+
     init {
         transaction(database) {
             SchemaUtils.createMissingTablesAndColumns(MagisterTable)
@@ -42,8 +44,6 @@ class MagisterDataService(database: Database) {
 
     suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }
-
-
 
     companion object {
         lateinit var INSTANCE: BearerService

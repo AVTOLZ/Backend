@@ -38,7 +38,7 @@ fun main() {
     test >= AVTRanks.Brugger // no clue if this works
 
     test.ge(AVTRanks.Brugger) // this defintely works
-
-  enum class UserState {
+}
+enum class UserState {
     UNVERIFIED, VERIFIED, DISABLED
 }

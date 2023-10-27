@@ -37,7 +37,7 @@ fun Routing.loginRoutes() {
             user.createBearerToken()
         }
 
-        call.respond(HttpStatusCode.OK, LoginResponse(user.id.value, bearer))
+        call.respond(HttpStatusCode.OK, LoginResponse(user.id.value, bearer, user.state != UserState.UNVERIFIED))
     }
 
     post("/api/accounts/login/magister") {
@@ -67,6 +67,6 @@ fun Routing.loginRoutes() {
             user.createBearerToken()
         }
 
-        call.respond(HttpStatusCode.OK, LoginResponse(user.id.value, bearer))
+        call.respond(HttpStatusCode.OK, LoginResponse(user.id.value, bearer, user.state == UserState.UNVERIFIED))
     }
 }

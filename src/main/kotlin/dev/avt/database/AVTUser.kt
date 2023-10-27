@@ -14,10 +14,7 @@ class AVTUser(id: EntityID<Int>) : IntEntity(id), Principal {
     var lastName by UserService.Users.lastName
     var studentId by UserService.Users.studentId
     var rank by UserService.Users.rank
-}
-
-fun AVTUser.linkMagisterAccount() {
-
+    var state by UserService.Users.state
 }
 
 // this is currently mainly used for easily checking if a user is allowed to attend a certain thing based on rank
@@ -41,4 +38,7 @@ fun main() {
     test >= AVTRanks.Brugger // no clue if this works
 
     test.ge(AVTRanks.Brugger) // this defintely works
+
+  enum class UserState {
+    UNVERIFIED, VERIFIED, DISABLED
 }

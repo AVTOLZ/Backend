@@ -7,6 +7,8 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Routing.requestHours(){
     route("/api/person/{personId}/request_hours") {
@@ -26,33 +28,40 @@ fun Routing.requestHours(){
                     return@post
                 }
 
-                if (body.hours.isEmpty()) {
-                    call.respond(HttpStatusCode.BadRequest)
-                    return@post
-                }
+                println(body.hour)
 
-                val requestHours: Array<AvailableHoursTable> = emptyArray()
+                val requestedHour = transaction { AvailableHoursTable[body.hour] }
 
-                body.hours.forEach {
-                    val hourInQuestion = AvailableHoursTable[it]
-                    if (!reqUser.rank.ge(hourInQuestion.requiredRank)) {
-                        call.respond(HttpStatusCode.Forbidden)
+                if (body.requestType == HourRequestType.nothing) {
+                    val removeHour = transaction {
+                        RequestedHoursTable.find {
+                            (RequestedHoursService.RequestedHours.user eq reqUser.id) and (RequestedHoursService.RequestedHours.hour eq requestedHour.id.value)
+                        }.firstOrNull()
+                    }
+                    if (removeHour == null) {
+                        call.respond(HttpStatusCode.NotFound)
                         return@post
                     }
-                    requestHours + hourInQuestion
-                }
 
-                if (requestHours.isEmpty()) {
-                    call.respond(HttpStatusCode.NotFound)
+                    transaction { removeHour.delete() }
+                    call.respond(HttpStatusCode.OK)
                     return@post
                 }
 
-                requestHours.forEach {
-                    RequestedHoursTable.new {
-                        user = reqUser
-                        hour = it
-                    }
+                if (body.requestType == HourRequestType.present) {
+                    call.respond(HttpStatusCode.NotImplemented)
+                    return@post
                 }
+
+                if (!reqUser.rank.ge(requestedHour.requiredRank)) {
+                    call.respond(HttpStatusCode.Forbidden)
+                    return@post
+                }
+
+                transaction { RequestedHoursTable.new {
+                    this.user = reqUser
+                    this.hour = requestedHour
+                }}
 
                 call.respond(HttpStatusCode.OK)
 

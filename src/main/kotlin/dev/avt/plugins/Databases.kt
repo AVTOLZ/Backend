@@ -1,8 +1,6 @@
 package dev.avt.plugins
 
-import dev.avt.database.AVTUser
-import dev.avt.database.BearerService
-import dev.avt.database.UserService
+import dev.avt.database.*
 import dev.avt.database.UserService.Users.username
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -24,7 +22,13 @@ fun Application.configureDatabases() {
 
     val userService = UserService(database)
     val bearerService = BearerService(database)
+    val approvedHoursService = ApprovedHoursService(database)
+    val availableHoursService = AvailableHoursService(database)
+    val requestedHoursService = RequestedHoursService(database)
 
     UserService.INSTANCE = userService
     BearerService.INSTANCE = bearerService
+    ApprovedHoursService.INSTANCE = approvedHoursService
+    AvailableHoursService.INSTANCE = availableHoursService
+    RequestedHoursService.INSTANCE = requestedHoursService
 }

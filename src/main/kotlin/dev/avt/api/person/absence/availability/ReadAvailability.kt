@@ -33,7 +33,7 @@ fun Routing.readAvailabilityRoutes(){
                 val currentDate = Clock.System.now()
 
                 val remainingHours = transaction {
-                    val allHours = AvailableHoursTable.find { endTime.greaterEq(currentDate.epochSeconds) }
+                    val allHours = AvailableHoursTable.all()
                     return@transaction allHours.toList()
                 }
 

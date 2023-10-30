@@ -1,9 +1,6 @@
 package dev.avt.api.person.absence.availability
 
 import dev.avt.database.*
-import dev.avt.database.AvailableHoursService.AvailableHours.endTime
-import dev.avt.database.RequestedHoursService.RequestedHours.hour
-import dev.avt.database.RequestedHoursService.RequestedHours.user
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -33,8 +30,7 @@ fun Routing.readAvailabilityRoutes(){
                 val currentDate = Clock.System.now()
 
                 val remainingHours = transaction {
-                    val allHours = AvailableHoursTable.all()
-                    return@transaction allHours.toList()
+                    return@transaction AvailableHoursTable.all().toList()
                 }
 
                 if (remainingHours.isEmpty()) {
@@ -44,18 +40,21 @@ fun Routing.readAvailabilityRoutes(){
 
                 // also one of the main dissadvatages of an ide is that rn in vibing on the couch with my dog and my laptop on my lap, and dayum this thing is HOT
                 // also also my dog took the spot i was sitting
-                val allowedHours: Array<HourDataFormat> = emptyArray()
+                val allowedHours: MutableList<HourDataFormat> = mutableListOf()
 
                 remainingHours.forEach {
+                    println(reqUser.rank)
+                    println(it.requiredRank)
+                    println(reqUser.rank.ge(it.requiredRank))
                     if (reqUser.rank.ge(it.requiredRank)) {
                         val hourInQuestionStatus = checkHourStatus(reqUser, it)
 
-                        allowedHours + HourDataFormat(it.id.value, it.startTime, it.endTime, hourInQuestionStatus)
+                        allowedHours.add(HourDataFormat(it.id.value, it.startTime, it.endTime, hourInQuestionStatus))
                     }
                 }
 
                 if (allowedHours.isEmpty()) {
-                    call.respond(HttpStatusCode.NoContent)
+                    call.respond(HttpStatusCode.OK, ReadAvailabilityResponse(emptyList()))
                     return@get
                 }
 
@@ -67,7 +66,7 @@ fun Routing.readAvailabilityRoutes(){
 
 fun checkHourStatus(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): HourStatus {
     val approvedCheckThing = transaction {
-        ApprovedHoursTable.find { (user eq reqUser.id.value) and (hour eq hourInQuestion.id.value) }.firstOrNull()
+        ApprovedHoursTable.find { (ApprovedHoursService.ApprovedHours.user eq reqUser.id.value) and (ApprovedHoursService.ApprovedHours.hour eq hourInQuestion.id.value) }.firstOrNull()
     }
 
     if (approvedCheckThing != null) {
@@ -75,7 +74,7 @@ fun checkHourStatus(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): Hour
     }
 
     val requestedCheckThing = transaction {
-        RequestedHoursTable.find { (user eq reqUser.id.value) and (hour eq hourInQuestion.id.value) }.firstOrNull()
+        RequestedHoursTable.find { (RequestedHoursService.RequestedHours.user eq reqUser.id.value) and (RequestedHoursService.RequestedHours.hour eq hourInQuestion.id.value) }.firstOrNull()
     }
 
     if (requestedCheckThing != null) {

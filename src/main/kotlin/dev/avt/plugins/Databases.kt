@@ -2,6 +2,7 @@ package dev.avt.plugins
 
 import dev.avt.database.*
 import dev.avt.database.UserService.Users.username
+import dev.avt.dotEnv
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -14,10 +15,10 @@ lateinit var database: Database
 
 fun Application.configureDatabases() {
     database = Database.connect(
-        url = "jdbc:mariadb://86.83.65.7:3306/main",
-        user = "dev",
+        url = "jdbc:mariadb://${dotEnv["DATABASE_URL"]}:3306/${dotEnv["DATABASE_NAME"]}",
+        user = dotEnv["DATABASE_USERNAME"],
         driver = "org.mariadb.jdbc.Driver",
-        password = "AVT123456!!"
+        password = dotEnv["DATABASE_PASSWORD"]
     )
 
     val userService = UserService(database)

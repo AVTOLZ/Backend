@@ -23,8 +23,8 @@ fun Routing.registerRoutes() {
         val existingUser = transaction {
             AVTUser.find {
                 (UserService.Users.username eq body.username) or (UserService.Users.email eq body.email)
-            }
-        }.firstOrNull()
+            }.firstOrNull()
+        }
 
         if (existingUser != null) {
             call.respond(HttpStatusCode.Conflict)

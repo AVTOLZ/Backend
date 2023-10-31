@@ -33,7 +33,7 @@ fun Routing.requestHours(){
                 val notNiceClientCheck = transaction {
                     ApprovedHoursTable.find {
                         (ApprovedHoursService.ApprovedHours.user eq reqUser.id) and (ApprovedHoursService.ApprovedHours.hour eq requestedHour.id.value)
-                    }. firstOrNull()
+                    }.firstOrNull()
                 }
 
                 if (notNiceClientCheck != null) {

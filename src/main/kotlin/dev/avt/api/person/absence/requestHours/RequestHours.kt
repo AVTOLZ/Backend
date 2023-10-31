@@ -42,7 +42,7 @@ fun Routing.requestHours(){
                     return@post
                 }
 
-                if (body.requestType == HourRequestType.Nothing) {
+                if (body.requestType == HourRequestType.NOTHING) {
                     val removeHour = transaction {
                         RequestedHoursTable.find {
                             (RequestedHoursService.RequestedHours.user eq reqUser.id) and (RequestedHoursService.RequestedHours.hour eq requestedHour.id.value)
@@ -58,7 +58,7 @@ fun Routing.requestHours(){
                     return@post
                 }
 
-                if (body.requestType == HourRequestType.Present) {
+                if (body.requestType == HourRequestType.PRESENT) {
                     call.respond(HttpStatusCode.NotImplemented)
                     return@post
                 }

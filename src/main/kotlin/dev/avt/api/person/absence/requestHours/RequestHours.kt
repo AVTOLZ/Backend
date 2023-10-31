@@ -30,7 +30,19 @@ fun Routing.requestHours(){
 
                 val requestedHour = transaction { AvailableHoursTable[body.hour] }
 
-                if (body.requestType == HourRequestType.nothing) {
+                val notNiceClientCheck = transaction {
+                    ApprovedHoursTable.find {
+                        (ApprovedHoursService.ApprovedHours.user eq reqUser.id) and (ApprovedHoursService.ApprovedHours.hour eq requestedHour.id.value)
+                    }. firstOrNull()
+                }
+
+                if (notNiceClientCheck != null) {
+                    // if the client has already been approved it denies the request due to this not yet being implemented
+                    call.respond(HttpStatusCode.NotImplemented)
+                    return@post
+                }
+
+                if (body.requestType == HourRequestType.Nothing) {
                     val removeHour = transaction {
                         RequestedHoursTable.find {
                             (RequestedHoursService.RequestedHours.user eq reqUser.id) and (RequestedHoursService.RequestedHours.hour eq requestedHour.id.value)
@@ -46,7 +58,7 @@ fun Routing.requestHours(){
                     return@post
                 }
 
-                if (body.requestType == HourRequestType.present) {
+                if (body.requestType == HourRequestType.Present) {
                     call.respond(HttpStatusCode.NotImplemented)
                     return@post
                 }

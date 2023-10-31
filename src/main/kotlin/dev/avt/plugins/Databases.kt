@@ -1,9 +1,8 @@
 package dev.avt.plugins
 
-import dev.avt.database.AVTUser
-import dev.avt.database.BearerService
-import dev.avt.database.UserService
+import dev.avt.database.*
 import dev.avt.database.UserService.Users.username
+import dev.avt.dotEnv
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -16,26 +15,21 @@ lateinit var database: Database
 
 fun Application.configureDatabases() {
     database = Database.connect(
-        url = "jdbc:mariadb://192.168.1.12:3306/main",
-        user = "dev",
+        url = "jdbc:mariadb://${dotEnv["DATABASE_URL"]}:3306/${dotEnv["DATABASE_NAME"]}",
+        user = dotEnv["DATABASE_USERNAME"],
         driver = "org.mariadb.jdbc.Driver",
-        password = "AVT123456!!"
+        password = dotEnv["DATABASE_PASSWORD"]
     )
 
     val userService = UserService(database)
     val bearerService = BearerService(database)
-
-    transaction(database) {
-        AVTUser.new {
-            this.userName = "user"
-            this.password = "password"
-            this.email = "email"
-            this.firstName = "firstName"
-            this.lastName = "lastName"
-            this.studentId = 1
-        }
-    }
+    val approvedHoursService = ApprovedHoursService(database)
+    val availableHoursService = AvailableHoursService(database)
+    val requestedHoursService = RequestedHoursService(database)
 
     UserService.INSTANCE = userService
     BearerService.INSTANCE = bearerService
+    ApprovedHoursService.INSTANCE = approvedHoursService
+    AvailableHoursService.INSTANCE = availableHoursService
+    RequestedHoursService.INSTANCE = requestedHoursService
 }

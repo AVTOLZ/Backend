@@ -13,8 +13,23 @@ class AVTUser(id: EntityID<Int>) : IntEntity(id), Principal {
     var firstName by UserService.Users.firstName
     var lastName by UserService.Users.lastName
     var studentId by UserService.Users.studentId
+    var rank by UserService.Users.rank
+    var state by UserService.Users.state
 }
 
-fun AVTUser.linkMagisterAccount() {
+// this is currently mainly used for easily checking if a user is allowed to attend a certain thing based on rank
+enum class AVTRanks(val order: Int) {
+    Brugger(0),
+    PlannenLid(1),
+    Hoofd(2)
+}
 
+// this is a function to easily check if a users rank is sufficient for an event
+// for usage example see ReadAvailability.kt
+fun AVTRanks.ge(other: AVTRanks): Boolean {
+    return this.order >= other.order
+}
+
+enum class UserState {
+    UNVERIFIED, VERIFIED, DISABLED
 }

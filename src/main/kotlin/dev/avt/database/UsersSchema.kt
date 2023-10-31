@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
+// Koen was here
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
@@ -21,11 +22,13 @@ class UserService(database: Database) {
         val firstName = varchar("first_name", 50).nullable()
         val lastName = varchar("last_name", 50).nullable()
         val studentId = integer("student_id").nullable()
+        val rank = enumeration<AVTRanks>("user_rank").default(AVTRanks.Brugger)
+        val state = enumeration<UserState>("state").default(UserState.UNVERIFIED)
     }
 
     init {
         transaction(database) {
-            SchemaUtils.create(Users)
+            SchemaUtils.createMissingTablesAndColumns(Users)
         }
     }
 

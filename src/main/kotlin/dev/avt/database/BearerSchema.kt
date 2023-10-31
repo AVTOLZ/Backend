@@ -37,7 +37,7 @@ class BearerService(database: Database) {
     }
     init {
         transaction(database) {
-            SchemaUtils.create(Bearer)
+            SchemaUtils.createMissingTablesAndColumns(Bearer)
         }
     }
 

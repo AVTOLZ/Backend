@@ -1,19 +1,19 @@
 package dev.avt.api.accounts.login
 
-import dev.avt.database.*
-import dev.avt.database.UserService.Users.id
+import dev.avt.database.AVTUser
+import dev.avt.database.UserService
 import dev.avt.database.UserService.Users.password
 import dev.avt.database.UserService.Users.username
+import dev.avt.database.UserState
+import dev.avt.database.createBearerToken
 import dev.tiebe.magisterapi.api.account.LoginFlow
 import dev.tiebe.magisterapi.api.account.ProfileInfoFlow
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Routing.loginRoutes() {

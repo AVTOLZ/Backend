@@ -10,8 +10,6 @@ import jakarta.mail.internet.MimeMessage
 import java.util.Properties
 
 object Email {
-    private val dotEnv = dotenv()
-
     private val properties = Properties().apply {
         this["mail.smtp.auth"] = true
         this["mail.smtp.starttls.enable"] = true

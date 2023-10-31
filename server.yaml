@@ -48,6 +48,20 @@ paths:
         name: personId
         x-last-modified: 1698160567358
     x-last-modified: 1698160454673
+  /api/person/{personId}/availability:
+# TODO get tiebe to either explain how to do this or do it for me (preferably the latter option)
+    summary: working hours info
+    get:
+      responses:
+        401:
+          description: the bearer token was invalid
+        403:
+          description: the bearer token and the personId do not match
+        204:
+          description: there are no hours in the database or no hours the user can attend
+        200:
+          description: the hours the user is allowed to attend are in the response payload
+
 components:
   responses:
     LoginResponse:

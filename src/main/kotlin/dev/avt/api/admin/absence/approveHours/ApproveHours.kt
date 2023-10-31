@@ -15,6 +15,7 @@ fun Routing.approveHoursRoute() {
     route("/api/admin/{peronId}/approve_absence") {
         authenticate("auth-bearer") {
             post {
+                // TODO test this
                 val reqUser = call.principal<AVTUser>()
                 val personId = call.parameters["personId"]?.toIntOrNull() ?: return@post
                 val body = call.receive<ApproveHoursRequest>()

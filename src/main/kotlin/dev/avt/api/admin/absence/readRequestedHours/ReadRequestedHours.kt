@@ -12,6 +12,7 @@ fun Routing.readRequestedHours() {
     route("/api/admin/{personId}/requested_hours") {
         authenticate("auth-bearer") { 
             get {
+                // TODO test this
                 val reqUser = call.principal<AVTUser>()
                 val personId = call.parameters["personId"]?.toIntOrNull() ?: return@get
 

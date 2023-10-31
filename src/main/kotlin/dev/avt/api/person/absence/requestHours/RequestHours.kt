@@ -33,8 +33,8 @@ fun Routing.requestHours(){
                 val notNiceClientCheck = transaction {
                     ApprovedHoursTable.find {
                         (ApprovedHoursService.ApprovedHours.user eq reqUser.id) and (ApprovedHoursService.ApprovedHours.hour eq requestedHour.id.value)
-                    }. firstOrNull()
-                }
+                    }
+                }.firstOrNull()
 
                 if (notNiceClientCheck != null) {
                     // if the client has already been approved it denies the request due to this not yet being implemented

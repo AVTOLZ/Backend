@@ -30,15 +30,6 @@ fun AVTRanks.ge(other: AVTRanks): Boolean {
     return this.order >= other.order
 }
 
-// this is sample code written by Tiebe for use as reference and is NOT meant to be used
-fun main() {
-    val test = AVTRanks.Hoofd
-
-    // i think this compares the order in which they're defined, which also works I suppose
-    test >= AVTRanks.Brugger // no clue if this works
-
-    test.ge(AVTRanks.Brugger) // this defintely works
-}
 enum class UserState {
     UNVERIFIED, VERIFIED, DISABLED
 }

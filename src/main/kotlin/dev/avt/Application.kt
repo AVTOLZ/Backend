@@ -21,13 +21,4 @@ fun Application.module() {
     configureDatabases()
     configureSockets()
     configureRouting()
-    // I was here :)
-    // Same! :(
-
-    // I'm tired
-    // same
-
-    // should we sleep?
-    // yes, maybe
-    // shiykd we
 }

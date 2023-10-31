@@ -1,10 +1,6 @@
 package dev.avt.database
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -46,14 +42,4 @@ enum class HourStatus(val order: Int) {
     Open(0),
     Requested(1),
     Approved(2)
-}
-
-// this is sample code written by Tiebe for use as reference and is NOT meant to be used
-fun test() {
-    val date = Clock.System.now()
-
-    val newDate = LocalDateTime(2006, 10, 25, 12, 0, 0)
-
-    val instant = newDate.toInstant(TimeZone.of("Europe/Amsterdam"))
-    instant.epochSeconds
 }

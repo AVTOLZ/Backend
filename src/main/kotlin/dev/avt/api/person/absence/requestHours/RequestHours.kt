@@ -28,8 +28,6 @@ fun Routing.requestHours(){
                     return@post
                 }
 
-                println(body.hour)
-
                 val requestedHour = transaction { AvailableHoursTable[body.hour] }
 
                 if (body.requestType == HourRequestType.nothing) {

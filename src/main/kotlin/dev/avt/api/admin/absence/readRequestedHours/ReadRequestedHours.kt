@@ -36,10 +36,10 @@ fun Routing.readRequestedHours() {
                     return@get
                 }
 
-                var res: Array<HoursRequestedDataFormat> = emptyArray()
+                val res: MutableList<HoursRequestedDataFormat> = mutableListOf()
 
                 RequestedHoursTable.all().forEach {
-                    res + HoursRequestedDataFormat(it.user.userName, it.hour.startTime, it.hour.endTime, it.id.value)
+                    res.add(HoursRequestedDataFormat(it.user.userName, it.hour.startTime, it.hour.endTime, it.id.value))
                 }
 
                 call.respond(HttpStatusCode.OK, ReadRequestedHoursResponse(res.toList()))

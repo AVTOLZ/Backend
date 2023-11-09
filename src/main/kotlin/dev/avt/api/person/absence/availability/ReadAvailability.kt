@@ -50,7 +50,7 @@ fun Routing.readAvailabilityRoutes(){
                         val hourInQuestionStatus = checkHourStatus(reqUser, it)
                         val markedPresence = checkPresentAnnounced(reqUser, it)
 
-                        allowedHours.add(HourDataFormat(it.id.value, it.startTime, it.endTime, hourInQuestionStatus, true, markedPresence)) // TODO replace true statement with data from magister
+                        allowedHours.add(HourDataFormat(it.id.value, it.startTime, it.endTime, hourInQuestionStatus, markedPresence))
                     }
                 }
 

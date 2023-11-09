@@ -22,10 +22,10 @@ fun Routing.linkRouting() {
     route("/api/person/{personId}/magister") {
         authenticate("auth-bearer") {
             post {
-                val personId = call.parameters["personId"]?.toIntOrNull() ?: return@post
+                val personId = call.parameters["personId"]?.toIntOrNull()
                 val user = call.principal<AVTUser>()
 
-                if (user == null) {
+                if (personId == null || user == null) {
                     call.respond(HttpStatusCode.Unauthorized)
                     return@post
                 }

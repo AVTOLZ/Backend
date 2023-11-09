@@ -4,4 +4,4 @@ import dev.avt.database.HourStatus
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class HourDataFormat(val id: Int, val startTime: Long, val endTime: Long, val status: HourStatus)
+data class HourDataFormat(val id: Int, val startTime: Long, val endTime: Long, val status: HourStatus, val absenceRequired: Boolean, val markedPresence: Boolean)

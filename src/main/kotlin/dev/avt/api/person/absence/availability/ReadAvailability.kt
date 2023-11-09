@@ -48,8 +48,9 @@ fun Routing.readAvailabilityRoutes(){
                     println(reqUser.rank.ge(it.requiredRank))
                     if (reqUser.rank.ge(it.requiredRank)) {
                         val hourInQuestionStatus = checkHourStatus(reqUser, it)
+                        val markedPresence = checkPresentAnnounced(reqUser, it)
 
-                        allowedHours.add(HourDataFormat(it.id.value, it.startTime, it.endTime, hourInQuestionStatus))
+                        allowedHours.add(HourDataFormat(it.id.value, it.startTime, it.endTime, hourInQuestionStatus, true, markedPresence)) // TODO replace true statement with data from magister
                     }
                 }
 
@@ -82,4 +83,12 @@ fun checkHourStatus(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): Hour
     }
 
     return  HourStatus.Open
+}
+
+fun checkPresentAnnounced(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): Boolean {
+    val present = transaction {
+        PresentTable.find { (PresentService.PresentHours.user eq reqUser.id.value) and (PresentService.PresentHours.hour eq hourInQuestion.id.value) }.firstOrNull()
+    }
+
+    return present != null
 }

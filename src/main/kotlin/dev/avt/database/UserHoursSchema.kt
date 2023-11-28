@@ -18,11 +18,11 @@ class UserHoursTable(id: EntityID<Int>): IntEntity(id) {
     var timeApproved by UserHoursService.UserHours.timeApproved
     var presentType by UserHoursService.UserHours.PresentType
     var approved by UserHoursService.UserHours.approved
+    var timeRequested by UserHoursService.UserHours.timeRequested
 }
 
 class UserHoursService(database: Database) {
 
-    // I looked it up approver is a word in the english language but the spell check does not agree with me
     object UserHours : IntIdTable() {
         val user = reference("user", UserService.Users)
         val hour = reference("hour", AvailableHoursService.AvailableHours)
@@ -30,6 +30,7 @@ class UserHoursService(database: Database) {
         val timeApproved = long("time_approved").nullable()
         val PresentType = enumeration<PresenceType>("present_type")
         val approved = bool("approved").default(false)
+        val timeRequested = long("time_requested")
     }
 
     init {

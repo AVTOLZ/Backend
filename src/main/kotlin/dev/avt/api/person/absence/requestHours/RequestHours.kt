@@ -7,6 +7,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -75,6 +76,7 @@ fun Routing.requestHours(){
                             notNiceClientCheck.approved = false
                             notNiceClientCheck.approver = null
                             notNiceClientCheck.timeApproved = null
+                            notNiceClientCheck.timeRequested = Clock.System.now().epochSeconds
                         }
                         call.respond(HttpStatusCode.OK)
                         return@post
@@ -90,6 +92,7 @@ fun Routing.requestHours(){
                     this.user = reqUser
                     this.hour = requestedHour
                     this.presentType = PresenceType.Absence
+                    this.timeRequested = Clock.System.now().epochSeconds
                 }}
 
                 call.respond(HttpStatusCode.OK)

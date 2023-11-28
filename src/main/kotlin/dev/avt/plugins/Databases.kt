@@ -17,14 +17,14 @@ fun Application.configureDatabases() {
 
     val userService = UserService(database)
     val bearerService = BearerService(database)
-    val approvedHoursService = ApprovedHoursService(database)
+    val userHoursService = UserHoursService(database)
     val availableHoursService = AvailableHoursService(database)
     val requestedHoursService = RequestedHoursService(database)
     val presentService = PresentService(database)
 
     UserService.INSTANCE = userService
     BearerService.INSTANCE = bearerService
-    ApprovedHoursService.INSTANCE = approvedHoursService
+    UserHoursService.INSTANCE = userHoursService
     AvailableHoursService.INSTANCE = availableHoursService
     RequestedHoursService.INSTANCE = requestedHoursService
     PresentService.INSTANCE = presentService

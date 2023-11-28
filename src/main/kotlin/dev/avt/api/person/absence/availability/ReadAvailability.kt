@@ -67,7 +67,7 @@ fun Routing.readAvailabilityRoutes(){
 
 fun checkHourStatus(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): HourStatus {
     val approvedCheckThing = transaction {
-        ApprovedHoursTable.find { (ApprovedHoursService.ApprovedHours.user eq reqUser.id.value) and (ApprovedHoursService.ApprovedHours.hour eq hourInQuestion.id.value) }.firstOrNull()
+        UserHoursTable.find { (UserHoursService.UserHours.user eq reqUser.id.value) and (UserHoursService.UserHours.hour eq hourInQuestion.id.value) }.firstOrNull()
     }
 
     if (approvedCheckThing != null) {

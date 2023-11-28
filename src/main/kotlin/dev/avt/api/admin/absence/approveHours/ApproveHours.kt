@@ -1,7 +1,7 @@
 package dev.avt.api.admin.absence.approveHours
 
 import dev.avt.database.AVTUser
-import dev.avt.database.ApprovedHoursTable
+import dev.avt.database.UserHoursTable
 import dev.avt.database.RequestedHoursTable
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -49,7 +49,7 @@ fun Routing.approveHoursRoute() {
                 val currentTime = Clock.System.now().epochSeconds
 
                 approvedRequestedHours.forEach {
-                    ApprovedHoursTable.new {
+                    UserHoursTable.new {
                         user = it.user
                         hour = it.hour
                         approver = reqUser

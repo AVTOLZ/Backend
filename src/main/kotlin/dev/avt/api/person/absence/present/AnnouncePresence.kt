@@ -37,8 +37,8 @@ fun Routing.announcePresenceRouting(){
 
                 if (body.remove) {
                     val removeHour = transaction {
-                        PresentTable.find {
-                            (PresentService.PresentHours.user eq reqUser.id.value) and (PresentService.PresentHours.hour eq requestedHour.id.value)
+                        UserHoursTable.find {
+                            (UserHoursService.UserHours.user eq reqUser.id.value) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
                         }.firstOrNull()
                     }
 
@@ -47,10 +47,17 @@ fun Routing.announcePresenceRouting(){
                         return@post
                     }
 
+                    if (removeHour.presentType == PresenceType.Absence && removeHour.approved){
+                        call.respond(HttpStatusCode.Conflict)
+                        return@post
+                    }
+
                     transaction { removeHour.delete() }
                     call.respond(HttpStatusCode.OK)
                     return@post
                 }
+
+                // TODO add check to see if ots already in the db
 
                 if (!reqUser.rank.ge(requestedHour.requiredRank)) {
                     call.respond(HttpStatusCode.Forbidden)
@@ -58,9 +65,10 @@ fun Routing.announcePresenceRouting(){
                 }
 
                 transaction {
-                    PresentTable.new {
-                        user = reqUser
-                        hour = requestedHour
+                    UserHoursTable.new {
+                        this.user = reqUser
+                        this.hour = requestedHour
+                        this.presentType = PresenceType.Present
                     }
                 }
 

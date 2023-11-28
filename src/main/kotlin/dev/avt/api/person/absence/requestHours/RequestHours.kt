@@ -30,7 +30,7 @@ fun Routing.requestHours(){
 
                 val requestedHour = transaction { AvailableHoursTable[body.hour] }
 
-                if (body.requestType == HourRequestType.NOTHING) {
+                if (body.remove) {
                     val removeHour = transaction {
                         UserHoursTable.find {
                             (UserHoursService.UserHours.user eq reqUser.id) and (UserHoursService.UserHours.hour eq requestedHour.id.value)

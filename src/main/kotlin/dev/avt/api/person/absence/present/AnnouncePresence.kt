@@ -47,7 +47,7 @@ fun Routing.announcePresenceRouting(){
                         return@post
                     }
 
-                    if (removeHour.presentType == PresenceType.Absence && removeHour.approved){
+                    if (removeHour.approved){
                         call.respond(HttpStatusCode.Conflict)
                         return@post
                     }
@@ -57,7 +57,34 @@ fun Routing.announcePresenceRouting(){
                     return@post
                 }
 
-                // TODO add check to see if ots already in the db
+                val notNiceClientCheck = transaction {
+                    UserHoursTable.find {
+                        (UserHoursService.UserHours.user eq reqUser.id) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
+                    }.firstOrNull()
+                }
+
+                if (notNiceClientCheck != null) {
+                    if (notNiceClientCheck.approved) {
+                        call.respond(HttpStatusCode.Conflict)
+                        return@post
+                    }
+
+                    if (notNiceClientCheck.presentType == PresenceType.Present){
+                        call.respond(HttpStatusCode.OK)
+                        return@post
+                    }
+
+                    if (notNiceClientCheck.presentType == PresenceType.Absence) {
+                        transaction {
+                            notNiceClientCheck.presentType = PresenceType.Present
+                            notNiceClientCheck.approved = false
+                            notNiceClientCheck.approver = null
+                            notNiceClientCheck.timeApproved = null
+                        }
+                        call.respond(HttpStatusCode.OK)
+                        return@post
+                    }
+                }
 
                 if (!reqUser.rank.ge(requestedHour.requiredRank)) {
                     call.respond(HttpStatusCode.Forbidden)

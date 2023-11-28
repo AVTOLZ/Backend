@@ -47,10 +47,9 @@ fun Routing.readAvailabilityRoutes(){
                     println(it.requiredRank)
                     println(reqUser.rank.ge(it.requiredRank))
                     if (reqUser.rank.ge(it.requiredRank)) {
-                        val hourInQuestionStatus = checkHourStatus(reqUser, it)
-                        val markedPresence = checkPresentAnnounced(reqUser, it)
 
-                        allowedHours.add(HourDataFormat(it.id.value, it.startTime, it.endTime, hourInQuestionStatus, markedPresence))
+
+                        allowedHours.add(HourDataFormat(it.id.value, it.startTime, it.endTime, checkPresentType(reqUser, it), checkHourApproved(reqUser, it)))
                     }
                 }
 
@@ -65,30 +64,18 @@ fun Routing.readAvailabilityRoutes(){
     }
 }
 
-fun checkHourStatus(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): HourStatus {
-    val approvedCheckThing = transaction {
+fun checkHourApproved(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): Boolean {
+    val userHourEntry = transaction {
         UserHoursTable.find { (UserHoursService.UserHours.user eq reqUser.id.value) and (UserHoursService.UserHours.hour eq hourInQuestion.id.value) }.firstOrNull()
-    }
+    } ?: return false
 
-    if (approvedCheckThing != null) {
-        return HourStatus.Approved
-    }
-
-    val requestedCheckThing = transaction {
-        RequestedHoursTable.find { (RequestedHoursService.RequestedHours.user eq reqUser.id.value) and (RequestedHoursService.RequestedHours.hour eq hourInQuestion.id.value) }.firstOrNull()
-    }
-
-    if (requestedCheckThing != null) {
-        return HourStatus.Requested
-    }
-
-    return  HourStatus.Open
+    return userHourEntry.approved
 }
 
-fun checkPresentAnnounced(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): Boolean {
-    val present = transaction {
-        PresentTable.find { (PresentService.PresentHours.user eq reqUser.id.value) and (PresentService.PresentHours.hour eq hourInQuestion.id.value) }.firstOrNull()
-    }
+fun checkPresentType(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): PresenceType? {
+    val userHourEntry = transaction {
+        UserHoursTable.find { (UserHoursService.UserHours.user eq reqUser.id.value) and (UserHoursService.UserHours.hour eq hourInQuestion.id.value) }.firstOrNull()
+    } ?: return null
 
-    return present != null
+    return userHourEntry.presentType
 }

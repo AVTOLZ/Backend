@@ -48,6 +48,7 @@ class UserHoursService(database: Database) {
 }
 
 enum class PresenceType {
-    Absence,
-    Present
+    ABSENCE,
+    PRESENT,
+    NOTHING
 }

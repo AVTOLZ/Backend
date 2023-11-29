@@ -72,10 +72,10 @@ fun checkHourApproved(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): Bo
     return userHourEntry.approved
 }
 
-fun checkPresentType(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): PresenceType? {
+fun checkPresentType(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): PresenceType {
     val userHourEntry = transaction {
         UserHoursTable.find { (UserHoursService.UserHours.user eq reqUser.id.value) and (UserHoursService.UserHours.hour eq hourInQuestion.id.value) }.firstOrNull()
-    } ?: return null
+    } ?: return PresenceType.NOTHING
 
     return userHourEntry.presentType
 }

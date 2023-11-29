@@ -36,7 +36,7 @@ fun Routing.approveHoursRoute() {
 
                 val approvedHour = transaction {
                     UserHoursTable.find {
-                    (UserHoursService.UserHours.id eq body.id)
+                        (UserHoursService.UserHours.id eq body.id)
                     }.firstOrNull()
                 }
 
@@ -45,7 +45,7 @@ fun Routing.approveHoursRoute() {
                     return@post
                 }
 
-                if (approvedHour.presentType == PresenceType.Present || approvedHour.approved){
+                if (approvedHour.presentType == PresenceType.PRESENT || approvedHour.approved){
                     call.respond(HttpStatusCode.Conflict)
                     return@post
                 }

@@ -70,14 +70,14 @@ fun Routing.announcePresenceRouting(){
                         return@post
                     }
 
-                    if (notNiceClientCheck.presentType == PresenceType.Present){
+                    if (notNiceClientCheck.presentType == PresenceType.PRESENT){
                         call.respond(HttpStatusCode.OK)
                         return@post
                     }
 
-                    if (notNiceClientCheck.presentType == PresenceType.Absence) {
+                    if (notNiceClientCheck.presentType == PresenceType.ABSENCE) {
                         transaction {
-                            notNiceClientCheck.presentType = PresenceType.Present
+                            notNiceClientCheck.presentType = PresenceType.PRESENT
                             notNiceClientCheck.approved = false
                             notNiceClientCheck.approver = null
                             notNiceClientCheck.timeApproved = null
@@ -97,7 +97,7 @@ fun Routing.announcePresenceRouting(){
                     UserHoursTable.new {
                         this.user = reqUser
                         this.hour = requestedHour
-                        this.presentType = PresenceType.Present
+                        this.presentType = PresenceType.PRESENT
                         this.timeRequested = Clock.System.now().epochSeconds
                     }
                 }

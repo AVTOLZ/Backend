@@ -65,14 +65,14 @@ fun Routing.requestHours(){
                         return@post
                     }
 
-                    if (notNiceClientCheck.presentType == PresenceType.Absence) {
+                    if (notNiceClientCheck.presentType == PresenceType.ABSENCE) {
                         call.respond(HttpStatusCode.OK)
                         return@post
                     }
 
-                    if (notNiceClientCheck.presentType == PresenceType.Present){
+                    if (notNiceClientCheck.presentType == PresenceType.PRESENT){
                         transaction {
-                            notNiceClientCheck.presentType = PresenceType.Absence
+                            notNiceClientCheck.presentType = PresenceType.ABSENCE
                             notNiceClientCheck.approved = false
                             notNiceClientCheck.approver = null
                             notNiceClientCheck.timeApproved = null
@@ -91,7 +91,7 @@ fun Routing.requestHours(){
                 transaction { UserHoursTable.new {
                     this.user = reqUser
                     this.hour = requestedHour
-                    this.presentType = PresenceType.Absence
+                    this.presentType = PresenceType.ABSENCE
                     this.timeRequested = Clock.System.now().epochSeconds
                 }}
 

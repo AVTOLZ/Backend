@@ -34,24 +34,28 @@ fun Routing.readRequestedHours() {
 
                 val requestedHoursList = transaction {
                     UserHoursTable.find {
-                        (UserHoursService.UserHours.PresentType eq PresenceType.Absence) and (UserHoursService.UserHours.approved eq false)
+                        (UserHoursService.UserHours.PresentType eq PresenceType.ABSENCE) and (UserHoursService.UserHours.approved eq false)
                     }.toList()
                 }
 
-                val responseList: MutableList<HoursRequestedDataFormat> = mutableListOf()
-
-                requestedHoursList.forEach {
-                    responseList.add(HoursRequestedDataFormat(
-                        it.user.id.value,
-                        it.hour.startTime,
-                        it.hour.endTime,
-                        it.timeRequested,
-                        it.id.value
-                    ))
-                }
-
-                call.respond(HttpStatusCode.OK, ReadRequestedHoursResponse(responseList.toList()))
+                call.respond(HttpStatusCode.OK, responseData(requestedHoursList))
             }
         }
     }
+}
+
+fun responseData(list: List<UserHoursTable>): ReadRequestedHoursResponse {
+    val responseList: MutableList<HoursRequestedDataFormat> = mutableListOf()
+
+    list.forEach {
+        responseList.add(HoursRequestedDataFormat(
+            it.user.id.value,
+            it.hour.startTime,
+            it.hour.endTime,
+            it.timeRequested,
+            it.id.value
+        ))
+    }
+
+    return ReadRequestedHoursResponse(responseList.toList())
 }

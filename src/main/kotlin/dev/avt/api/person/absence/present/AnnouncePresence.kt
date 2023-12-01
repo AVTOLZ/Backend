@@ -7,6 +7,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -37,8 +38,8 @@ fun Routing.announcePresenceRouting(){
 
                 if (body.remove) {
                     val removeHour = transaction {
-                        PresentTable.find {
-                            (PresentService.PresentHours.user eq reqUser.id.value) and (PresentService.PresentHours.hour eq requestedHour.id.value)
+                        UserHoursTable.find {
+                            (UserHoursService.UserHours.user eq reqUser.id.value) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
                         }.firstOrNull()
                     }
 
@@ -47,9 +48,44 @@ fun Routing.announcePresenceRouting(){
                         return@post
                     }
 
+                    if (removeHour.approved){
+                        call.respond(HttpStatusCode.Conflict)
+                        return@post
+                    }
+
                     transaction { removeHour.delete() }
                     call.respond(HttpStatusCode.OK)
                     return@post
+                }
+
+                val notNiceClientCheck = transaction {
+                    UserHoursTable.find {
+                        (UserHoursService.UserHours.user eq reqUser.id) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
+                    }.firstOrNull()
+                }
+
+                if (notNiceClientCheck != null) {
+                    if (notNiceClientCheck.approved) {
+                        call.respond(HttpStatusCode.Conflict)
+                        return@post
+                    }
+
+                    if (notNiceClientCheck.presentType == PresenceType.PRESENT){
+                        call.respond(HttpStatusCode.OK)
+                        return@post
+                    }
+
+                    if (notNiceClientCheck.presentType == PresenceType.ABSENCE) {
+                        transaction {
+                            notNiceClientCheck.presentType = PresenceType.PRESENT
+                            notNiceClientCheck.approved = false
+                            notNiceClientCheck.approver = null
+                            notNiceClientCheck.timeApproved = null
+                            notNiceClientCheck.timeRequested = Clock.System.now().epochSeconds
+                        }
+                        call.respond(HttpStatusCode.OK)
+                        return@post
+                    }
                 }
 
                 if (!reqUser.rank.ge(requestedHour.requiredRank)) {
@@ -58,9 +94,11 @@ fun Routing.announcePresenceRouting(){
                 }
 
                 transaction {
-                    PresentTable.new {
-                        user = reqUser
-                        hour = requestedHour
+                    UserHoursTable.new {
+                        this.user = reqUser
+                        this.hour = requestedHour
+                        this.presentType = PresenceType.PRESENT
+                        this.timeRequested = Clock.System.now().epochSeconds
                     }
                 }
 

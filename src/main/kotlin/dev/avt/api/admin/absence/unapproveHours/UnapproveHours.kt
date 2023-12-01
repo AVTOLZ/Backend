@@ -1,23 +1,25 @@
-package dev.avt.api.admin.absence.approveHours
+package dev.avt.api.admin.absence.unapproveHours
 
-import dev.avt.database.*
+import dev.avt.database.AVTRanks
+import dev.avt.database.AVTUser
+import dev.avt.database.UserHoursService
+import dev.avt.database.UserHoursTable
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun Routing.approveHoursRoute() {
-    route("/api/admin/{peronId}/approve_absence") {
+fun Routing.unapproveHoursRoute() {
+    route("api/admin/{personId}/unapprove_absence") {
         authenticate("auth-bearer") {
             post {
                 // TODO test this
                 val reqUser = call.principal<AVTUser>()
                 val personId = call.parameters["personId"]?.toIntOrNull() ?: return@post
-                val body = call.receive<ApproveHourRequest>()
+                val body = call.receive<UnapproveHoursRequest>()
 
                 if (reqUser == null) {
                     call.respond(HttpStatusCode.Unauthorized)
@@ -34,26 +36,26 @@ fun Routing.approveHoursRoute() {
                     return@post
                 }
 
-                val approvedHour = transaction {
+                val unapprovedHour = transaction {
                     UserHoursTable.find {
-                        (UserHoursService.UserHours.id eq body.id)
+                        UserHoursService.UserHours.id eq body.id
                     }.firstOrNull()
                 }
 
-                if (approvedHour == null) {
+                if (unapprovedHour == null){
                     call.respond(HttpStatusCode.NotFound)
                     return@post
                 }
 
-                if (approvedHour.presentType == PresenceType.PRESENT || approvedHour.approved){
+                if (!unapprovedHour.approved){
                     call.respond(HttpStatusCode.Conflict)
                     return@post
                 }
 
                 transaction {
-                    approvedHour.approved = true
-                    approvedHour.approver = reqUser
-                    approvedHour.timeApproved = Clock.System.now().epochSeconds
+                    unapprovedHour.approved = false
+                    unapprovedHour.approver = null
+                    unapprovedHour.timeApproved = null
                 }
 
                 call.respond(HttpStatusCode.OK)

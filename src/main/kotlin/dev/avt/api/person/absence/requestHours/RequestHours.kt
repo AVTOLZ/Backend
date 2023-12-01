@@ -7,6 +7,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -30,26 +31,20 @@ fun Routing.requestHours(){
 
                 val requestedHour = transaction { AvailableHoursTable[body.hour] }
 
-                val notNiceClientCheck = transaction {
-                    ApprovedHoursTable.find {
-                        (ApprovedHoursService.ApprovedHours.user eq reqUser.id) and (ApprovedHoursService.ApprovedHours.hour eq requestedHour.id.value)
-                    }.firstOrNull()
-                }
-
-                if (notNiceClientCheck != null) {
-                    // if the client has already been approved it denies the request due to this not yet being implemented
-                    call.respond(HttpStatusCode.NotImplemented)
-                    return@post
-                }
-
-                if (body.requestType == HourRequestType.NOTHING) {
+                if (body.remove) {
                     val removeHour = transaction {
-                        RequestedHoursTable.find {
-                            (RequestedHoursService.RequestedHours.user eq reqUser.id) and (RequestedHoursService.RequestedHours.hour eq requestedHour.id.value)
+                        UserHoursTable.find {
+                            (UserHoursService.UserHours.user eq reqUser.id) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
                         }.firstOrNull()
                     }
+
                     if (removeHour == null) {
                         call.respond(HttpStatusCode.NotFound)
+                        return@post
+                    }
+
+                    if (removeHour.approved) {
+                        call.respond(HttpStatusCode.Conflict)
                         return@post
                     }
 
@@ -58,9 +53,34 @@ fun Routing.requestHours(){
                     return@post
                 }
 
-                if (body.requestType == HourRequestType.PRESENT) {
-                    call.respond(HttpStatusCode.NotImplemented)
-                    return@post
+                val notNiceClientCheck = transaction {
+                    UserHoursTable.find {
+                        (UserHoursService.UserHours.user eq reqUser.id) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
+                    }.firstOrNull()
+                }
+
+                if (notNiceClientCheck != null){
+                    if (notNiceClientCheck.approved) {
+                        call.respond(HttpStatusCode.Conflict)
+                        return@post
+                    }
+
+                    if (notNiceClientCheck.presentType == PresenceType.ABSENCE) {
+                        call.respond(HttpStatusCode.OK)
+                        return@post
+                    }
+
+                    if (notNiceClientCheck.presentType == PresenceType.PRESENT){
+                        transaction {
+                            notNiceClientCheck.presentType = PresenceType.ABSENCE
+                            notNiceClientCheck.approved = false
+                            notNiceClientCheck.approver = null
+                            notNiceClientCheck.timeApproved = null
+                            notNiceClientCheck.timeRequested = Clock.System.now().epochSeconds
+                        }
+                        call.respond(HttpStatusCode.OK)
+                        return@post
+                    }
                 }
 
                 if (!reqUser.rank.ge(requestedHour.requiredRank)) {
@@ -68,9 +88,11 @@ fun Routing.requestHours(){
                     return@post
                 }
 
-                transaction { RequestedHoursTable.new {
+                transaction { UserHoursTable.new {
                     this.user = reqUser
                     this.hour = requestedHour
+                    this.presentType = PresenceType.ABSENCE
+                    this.timeRequested = Clock.System.now().epochSeconds
                 }}
 
                 call.respond(HttpStatusCode.OK)

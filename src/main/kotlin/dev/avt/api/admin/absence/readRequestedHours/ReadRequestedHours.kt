@@ -1,12 +1,13 @@
 package dev.avt.api.admin.absence.readRequestedHours
 
-import dev.avt.database.AVTUser
-import dev.avt.database.RequestedHoursTable
+import dev.avt.database.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Routing.readRequestedHours() {
     route("/api/admin/{personId}/requested_hours") {
@@ -26,24 +27,35 @@ fun Routing.readRequestedHours() {
                     return@get
                 }
 
-                if (reqUser.rank.order != 0) {
+                if (reqUser.rank != AVTRanks.Hoofd) {
                     call.respond(HttpStatusCode.Forbidden)
                     return@get
                 }
 
-                if (RequestedHoursTable.all().empty()) {
-                    call.respond(HttpStatusCode.NotFound)
-                    return@get
+                val requestedHoursList = transaction {
+                    UserHoursTable.find {
+                        (UserHoursService.UserHours.PresentType eq PresenceType.ABSENCE) and (UserHoursService.UserHours.approved eq false)
+                    }.toList()
                 }
 
-                val res: MutableList<HoursRequestedDataFormat> = mutableListOf()
-
-                RequestedHoursTable.all().forEach {
-                    res.add(HoursRequestedDataFormat(it.user.userName, it.hour.startTime, it.hour.endTime, it.id.value))
-                }
-
-                call.respond(HttpStatusCode.OK, ReadRequestedHoursResponse(res.toList()))
+                call.respond(HttpStatusCode.OK, responseData(requestedHoursList))
             }
         }
     }
+}
+
+fun responseData(list: List<UserHoursTable>): ReadRequestedHoursResponse {
+    val responseList: MutableList<HoursRequestedDataFormat> = mutableListOf()
+
+    list.forEach {
+        responseList.add(HoursRequestedDataFormat(
+            it.user.id.value,
+            it.hour.startTime,
+            it.hour.endTime,
+            it.timeRequested,
+            it.id.value
+        ))
+    }
+
+    return ReadRequestedHoursResponse(responseList.toList())
 }

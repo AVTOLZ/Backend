@@ -36,28 +36,6 @@ fun Routing.announcePresenceRouting(){
                     return@post
                 }
 
-                if (body.remove) {
-                    val removeHour = transaction {
-                        UserHoursTable.find {
-                            (UserHoursService.UserHours.user eq reqUser.id.value) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
-                        }.firstOrNull()
-                    }
-
-                    if (removeHour == null) {
-                        call.respond(HttpStatusCode.NotFound)
-                        return@post
-                    }
-
-                    if (removeHour.approved){
-                        call.respond(HttpStatusCode.Conflict)
-                        return@post
-                    }
-
-                    transaction { removeHour.delete() }
-                    call.respond(HttpStatusCode.OK)
-                    return@post
-                }
-
                 val notNiceClientCheck = transaction {
                     UserHoursTable.find {
                         (UserHoursService.UserHours.user eq reqUser.id) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
@@ -103,6 +81,50 @@ fun Routing.announcePresenceRouting(){
                 }
 
                 call.respond(HttpStatusCode.OK)
+            }
+
+            delete {
+                val reqUser = call.principal<AVTUser>()
+                val personId = call.parameters["personId"]?.toIntOrNull() ?: return@delete
+                val body = call.receive<AnnouncePresenceRequest>()
+
+                if (reqUser == null) {
+                    call.respond(HttpStatusCode.Unauthorized)
+                    return@delete
+                }
+
+                if (reqUser.id.value != personId) {
+                    call.respond(HttpStatusCode.Forbidden)
+                    return@delete
+                }
+
+                val requestedHour = transaction { AvailableHoursTable.find { AvailableHoursService.AvailableHours.id eq body.hour }.firstOrNull() }
+
+                if (requestedHour == null) {
+                    call.respond(HttpStatusCode.NotFound)
+                    return@delete
+                }
+
+                val removeHour = transaction {
+                    UserHoursTable.find {
+                        (UserHoursService.UserHours.user eq reqUser.id.value) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
+                    }.firstOrNull()
+                }
+
+                if (removeHour == null) {
+                    call.respond(HttpStatusCode.NotFound)
+                    return@delete
+                }
+
+                if (removeHour.approved){
+                    call.respond(HttpStatusCode.Conflict)
+                    return@delete
+                }
+
+                transaction { removeHour.delete() }
+                call.respond(HttpStatusCode.OK)
+                return@delete
+
             }
         }
     }

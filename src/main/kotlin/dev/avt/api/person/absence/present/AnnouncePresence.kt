@@ -123,8 +123,6 @@ fun Routing.announcePresenceRouting(){
 
                 transaction { removeHour.delete() }
                 call.respond(HttpStatusCode.OK)
-                return@delete
-
             }
         }
     }

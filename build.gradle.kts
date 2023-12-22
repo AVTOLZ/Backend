@@ -45,7 +45,7 @@ dependencies {
 
     implementation("dev.tiebe:magisterapi-jvm:1.1.13")
 
-    testImplementation("io.ktor:ktor-server-tests-jvm:2.3.5")
+    testImplementation("io.ktor:ktor-server-tests-jvm:2.3.7")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")

@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
     implementation("io.ktor:ktor-server-core-jvm:2.3.7")
-    implementation("io.ktor:ktor-server-auth-jvm:2.3.5")
+    implementation("io.ktor:ktor-server-auth-jvm:2.3.7")
     implementation("io.ktor:ktor-server-double-receive-jvm:2.3.7")
     implementation("io.ktor:ktor-server-resources:2.3.7")
     implementation("io.ktor:ktor-server-host-common-jvm:2.3.7")

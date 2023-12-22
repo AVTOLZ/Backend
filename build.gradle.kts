@@ -32,7 +32,7 @@ dependencies {
     implementation("io.ktor:ktor-server-resources:2.3.7")
     implementation("io.ktor:ktor-server-host-common-jvm:2.3.7")
     implementation("io.ktor:ktor-server-forwarded-header-jvm:2.3.7")
-    implementation("io.ktor:ktor-server-call-logging-jvm:2.3.5")
+    implementation("io.ktor:ktor-server-call-logging-jvm:2.3.7")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:2.3.5")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.3.5")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")

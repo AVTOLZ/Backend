@@ -1,4 +1,4 @@
-package dev.avt.api.person.absence.requestHours
+package dev.avt.api.person.absence.present
 
 import dev.avt.database.*
 import io.ktor.http.*
@@ -11,13 +11,13 @@ import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun Routing.requestHours(){
-    route("/api/person/{personId}/request_hours") {
+fun Routing.announcePresenceRouting(){
+    route("/api/person/{personId}/announce_presence") {
         authenticate("auth-bearer") {
             post {
                 val reqUser = call.principal<AVTUser>()
                 val personId = call.parameters["personId"]?.toIntOrNull() ?: return@post
-                val body = call.receive<RequestHoursRequest>()
+                val body = call.receive<AnnouncePresenceRequest>()
 
                 if (reqUser == null) {
                     call.respond(HttpStatusCode.Unauthorized)
@@ -29,12 +29,17 @@ fun Routing.requestHours(){
                     return@post
                 }
 
-                val requestedHour = transaction { AvailableHoursTable[body.hour] }
+                val requestedHour = transaction { AvailableHoursTable.find { AvailableHoursService.AvailableHours.id eq body.hour }.firstOrNull() }
+
+                if (requestedHour == null) {
+                    call.respond(HttpStatusCode.NotFound)
+                    return@post
+                }
 
                 if (body.remove) {
                     val removeHour = transaction {
                         UserHoursTable.find {
-                            (UserHoursService.UserHours.user eq reqUser.id) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
+                            (UserHoursService.UserHours.user eq reqUser.id.value) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
                         }.firstOrNull()
                     }
 
@@ -43,7 +48,7 @@ fun Routing.requestHours(){
                         return@post
                     }
 
-                    if (removeHour.approved) {
+                    if (removeHour.approved){
                         call.respond(HttpStatusCode.Conflict)
                         return@post
                     }
@@ -59,20 +64,20 @@ fun Routing.requestHours(){
                     }.firstOrNull()
                 }
 
-                if (notNiceClientCheck != null){
+                if (notNiceClientCheck != null) {
                     if (notNiceClientCheck.approved) {
                         call.respond(HttpStatusCode.Conflict)
                         return@post
                     }
 
-                    if (notNiceClientCheck.presentType == PresenceType.ABSENCE) {
+                    if (notNiceClientCheck.presentType == PresenceType.PRESENT){
                         call.respond(HttpStatusCode.OK)
                         return@post
                     }
 
-                    if (notNiceClientCheck.presentType == PresenceType.PRESENT){
+                    if (notNiceClientCheck.presentType == PresenceType.ABSENCE) {
                         transaction {
-                            notNiceClientCheck.presentType = PresenceType.ABSENCE
+                            notNiceClientCheck.presentType = PresenceType.PRESENT
                             notNiceClientCheck.approved = false
                             notNiceClientCheck.approver = null
                             notNiceClientCheck.timeApproved = null
@@ -88,17 +93,16 @@ fun Routing.requestHours(){
                     return@post
                 }
 
-                transaction { UserHoursTable.new {
-                    this.user = reqUser
-                    this.hour = requestedHour
-                    this.presentType = PresenceType.ABSENCE
-                    this.timeRequested = Clock.System.now().epochSeconds
-                }}
+                transaction {
+                    UserHoursTable.new {
+                        this.user = reqUser
+                        this.hour = requestedHour
+                        this.presentType = PresenceType.PRESENT
+                        this.timeRequested = Clock.System.now().epochSeconds
+                    }
+                }
 
                 call.respond(HttpStatusCode.OK)
-
-                // TODO ask tiebe how to add shit to server.yaml
-                // note to self: I honestly fear testing and debugging this code for bugs :)
             }
         }
     }

@@ -27,26 +27,26 @@ repositories {
 }
 
 dependencies {
-    implementation("io.ktor:ktor-server-core-jvm:2.3.5")
-    implementation("io.ktor:ktor-server-auth-jvm:2.3.5")
-    implementation("io.ktor:ktor-server-double-receive-jvm:2.3.5")
-    implementation("io.ktor:ktor-server-resources:2.3.5")
-    implementation("io.ktor:ktor-server-host-common-jvm:2.3.5")
-    implementation("io.ktor:ktor-server-forwarded-header-jvm:2.3.5")
-    implementation("io.ktor:ktor-server-call-logging-jvm:2.3.5")
-    implementation("io.ktor:ktor-server-content-negotiation-jvm:2.3.5")
-    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.3.5")
+    implementation("io.ktor:ktor-server-core-jvm:2.3.7")
+    implementation("io.ktor:ktor-server-auth-jvm:2.3.7")
+    implementation("io.ktor:ktor-server-double-receive-jvm:2.3.7")
+    implementation("io.ktor:ktor-server-resources:2.3.7")
+    implementation("io.ktor:ktor-server-host-common-jvm:2.3.7")
+    implementation("io.ktor:ktor-server-forwarded-header-jvm:2.3.7")
+    implementation("io.ktor:ktor-server-call-logging-jvm:2.3.7")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:2.3.7")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:2.3.7")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.mariadb.jdbc:mariadb-java-client:3.2.0")
     implementation("io.ktor:ktor-server-websockets-jvm:2.3.5")
-    implementation("io.ktor:ktor-server-netty-jvm:2.3.5")
+    implementation("io.ktor:ktor-server-netty-jvm:2.3.7")
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
     implementation("dev.tiebe:magisterapi-jvm:1.1.13")
 
-    testImplementation("io.ktor:ktor-server-tests-jvm:2.3.5")
+    testImplementation("io.ktor:ktor-server-tests-jvm:2.3.7")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")

@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Routing.verificationRoutes() {
     post("/api/accounts/verify") {
-        val code = call.parameters["code"]?.toIntOrNull() ?: return@post call.respond(HttpStatusCode.BadRequest)
+        val code = call.parameters["code"]?.filterNot { it.isWhitespace() } ?: return@post call.respond(HttpStatusCode.BadRequest)
         val personId = call.parameters["id"]?.toIntOrNull()  ?: return@post call.respond(HttpStatusCode.BadRequest)
 
         val user = transaction {

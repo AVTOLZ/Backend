@@ -38,8 +38,4 @@ object Email {
 
         Transport.send(message)
     }
-
-    init {
-
-    }
 }

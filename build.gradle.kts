@@ -44,6 +44,8 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm:2.3.7")
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
+    implementation("at.favre.lib:bcrypt:0.10.2")
+
     implementation("dev.tiebe:magisterapi-jvm:1.1.13")
 
     testImplementation("io.ktor:ktor-server-tests-jvm:2.3.7")

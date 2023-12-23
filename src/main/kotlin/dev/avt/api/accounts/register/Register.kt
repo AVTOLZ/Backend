@@ -1,5 +1,6 @@
 package dev.avt.api.accounts.register
 
+import at.favre.lib.crypto.bcrypt.BCrypt
 import dev.avt.Email
 import dev.avt.api.accounts.login.LoginResponse
 import dev.avt.database.AVTUser
@@ -13,8 +14,9 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.transactions.transaction
+import kotlin.random.Random
 
-val verificationCodes = mutableMapOf<Int, Int>()
+val verificationCodes = mutableMapOf<Int, String>()
 
 fun Routing.registerRoutes() {
     post("/api/accounts/register") {
@@ -34,14 +36,14 @@ fun Routing.registerRoutes() {
         val user = transaction {
             AVTUser.new {
                 this.userName = body.username
-                this.password = body.password
+                this.password = BCrypt.withDefaults().hashToString(12, body.password.toCharArray())
                 this.email = body.email
                 this.firstName = body.firstName
                 this.lastName = body.lastName
             }
         }
 
-        verificationCodes[user.id.value] = (100000..999999).random()
+        verificationCodes[user.id.value] = String.format("%06d", Random.nextInt(999999));
 
         Email.sendMail(body.email, "Welcome to AVT!", """
             Hello ${user.firstName},

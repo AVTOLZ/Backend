@@ -39,6 +39,8 @@ fun Routing.linkRouting() {
                     val tenantUrl = ProfileInfoFlow.getTenantUrl(magisterTokens.accessToken)
                     val profileInfo = ProfileInfoFlow.getProfileInfo(tenantUrl.toString(), magisterTokens.accessToken)
 
+                    val studyInfo = ProfileInfoFlow.getStudyInfo(tenantUrl.toString(), magisterTokens.accessToken, profileInfo.person.id)
+
                     // save magister information to database
                     transaction {
                         val avtUser = AVTUser[personId]
@@ -51,6 +53,8 @@ fun Routing.linkRouting() {
                             it[this.tokenExpiry] = magisterTokens.expiresAt
                             it[this.tenantUrl] = tenantUrl.toString()
                         }
+
+                        avtUser.studentId = studyInfo.stamNr.toIntOrNull()
                     }
 
                     call.respond(HttpStatusCode.OK)

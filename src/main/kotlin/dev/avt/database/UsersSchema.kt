@@ -17,7 +17,7 @@ import org.jetbrains.exposed.sql.*
 class UserService(database: Database) {
     object Users : IntIdTable() {
         val username = varchar("username", 50).uniqueIndex()
-        val password = char("password", 128)
+        val password = binary("password", 60)
         val email = varchar("email", 50).nullable()
         val firstName = varchar("first_name", 50).nullable()
         val lastName = varchar("last_name", 50).nullable()

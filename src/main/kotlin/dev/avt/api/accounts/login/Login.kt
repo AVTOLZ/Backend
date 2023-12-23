@@ -29,7 +29,7 @@ fun Routing.loginRoutes() {
             users.firstOrNull()
         }
 
-        if (user == null || !BCrypt.verifyer().verify(body.password.toCharArray(), user.password.toCharArray()).verified) {
+        if (user == null || !BCrypt.verifyer().verify(body.password.toCharArray(), user.password).verified) {
             call.respond(HttpStatusCode.Unauthorized)
             return@post
         }

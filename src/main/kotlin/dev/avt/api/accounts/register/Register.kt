@@ -36,7 +36,7 @@ fun Routing.registerRoutes() {
         val user = transaction {
             AVTUser.new {
                 this.userName = body.username
-                this.password = BCrypt.withDefaults().hashToString(12, body.password.toCharArray())
+                this.password = BCrypt.withDefaults().hashToString(12, body.password.toCharArray()).toByteArray(Charsets.UTF_8)
                 this.email = body.email
                 this.firstName = body.firstName
                 this.lastName = body.lastName

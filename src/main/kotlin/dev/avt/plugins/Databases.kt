@@ -4,6 +4,7 @@ import dev.avt.database.*
 import dev.avt.dotEnv
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
 
 lateinit var database: Database
 

@@ -7,7 +7,6 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -51,13 +50,9 @@ class PermissionService(database: Database) {
     }
 }
 
-fun getPermissions(Uid: EntityID<Int>): Unit? {
-
-    val perms = transaction {
-        val amongus = PermissionList.find { PermissionService.Permissions.user eq Uid }
-        return@transaction amongus.firstOrNull()
-    } ?: return null
+fun getPermissions(uid: EntityID<Int>): Unit? {
+    val perms = transaction { PermissionList.find { PermissionService.Permissions.user eq uid }.firstOrNull() } ?: return null
 
     //TODO loops through all cells in the row perms and return an array of the column names of the cells that are true
-    return TODO("Provide the return value")
+    TODO("Provide the return value")
 }

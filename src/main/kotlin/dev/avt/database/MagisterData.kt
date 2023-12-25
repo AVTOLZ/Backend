@@ -27,8 +27,8 @@ class MagisterData(id: EntityID<Int>) : IntEntity(id) {
 class MagisterDataService(database: Database) {
 
     object MagisterTable : IntIdTable() {
-        val accessToken = varchar("access_token", 256)
-        val refreshToken = varchar("refresh_token", 256)
+        val accessToken = text("access_token")
+        val refreshToken = text("refresh_token")
 
         val tokenExpiry = long("token_expiry")
         val tenantUrl = varchar("tenant_url", 128)
@@ -46,6 +46,6 @@ class MagisterDataService(database: Database) {
         newSuspendedTransaction(Dispatchers.IO) { block() }
 
     companion object {
-        lateinit var INSTANCE: BearerService
+        lateinit var INSTANCE: MagisterDataService
     }
 }

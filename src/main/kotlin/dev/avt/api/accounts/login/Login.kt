@@ -1,5 +1,6 @@
 package dev.avt.api.accounts.login
 
+import at.favre.lib.crypto.bcrypt.BCrypt
 import dev.avt.database.AVTUser
 import dev.avt.database.UserService
 import dev.avt.database.UserService.Users.password
@@ -22,13 +23,13 @@ fun Routing.loginRoutes() {
 
         val user = transaction {
             val users = AVTUser.find {
-                (username eq body.username) and (password eq body.password)
+                username eq body.username
             }
 
             users.firstOrNull()
         }
 
-        if (user == null) {
+        if (user == null || !BCrypt.verifyer().verify(body.password.toCharArray(), user.password).verified) {
             call.respond(HttpStatusCode.Unauthorized)
             return@post
         }

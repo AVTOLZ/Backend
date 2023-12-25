@@ -30,10 +30,7 @@ fun Routing.readPermissionsRoutes(){
                     return@get
                 }
 
-                val perms = transaction {
-                    val amongus = PermissionList.find { user eq reqUser.id }
-                    return@transaction amongus.firstOrNull()
-                }
+                val perms = transaction { PermissionList.find { user eq reqUser.id }.firstOrNull() }
 
                 if (perms == null){
                     call.respond(HttpStatusCode.NoContent)

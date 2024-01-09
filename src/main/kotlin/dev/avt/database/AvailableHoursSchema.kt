@@ -15,6 +15,8 @@ class AvailableHoursTable(id: EntityID<Int>) : IntEntity(id) {
     var requiredRank by AvailableHoursService.AvailableHours.requiredRank
     var startTime by AvailableHoursService.AvailableHours.startTime
     var endTime by AvailableHoursService.AvailableHours.endTime
+    var title by AvailableHoursService.AvailableHours.title
+    var description by AvailableHoursService.AvailableHours.description
 }
 
 class AvailableHoursService(database: Database) {
@@ -22,6 +24,8 @@ class AvailableHoursService(database: Database) {
         val requiredRank = enumeration<AVTRanks>("required_rank").default(AVTRanks.Brugger)
         val startTime = long("start_time").default(0)
         val endTime = long("end_time").default(0)
+        val title = varchar("title", 50).default("default name")
+        val description = varchar("description", 100).default("default description")
     }
 
     init {

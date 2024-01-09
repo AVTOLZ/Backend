@@ -48,8 +48,14 @@ fun Routing.readAvailabilityRoutes(){
                     println(reqUser.rank.ge(it.requiredRank))
                     if (reqUser.rank.ge(it.requiredRank)) {
 
-
-                        allowedHours.add(HourDataFormat(it.id.value, it.startTime, it.endTime, checkPresentType(reqUser, it), checkHourApproved(reqUser, it)))
+                        allowedHours.add(HourDataFormat(
+                            it.id.value,
+                            it.startTime,
+                            it.endTime,
+                            it.title,
+                            it.description,
+                            checkPresentType(reqUser, it),
+                            checkHourApproved(reqUser, it)))
                     }
                 }
 

@@ -51,7 +51,7 @@ dependencies {
     testImplementation("io.ktor:ktor-server-tests-jvm:2.3.7")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
     implementation("org.eclipse.angus:angus-mail:2.0.2")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 }

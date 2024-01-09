@@ -46,7 +46,7 @@ dependencies {
 
     implementation("at.favre.lib:bcrypt:0.10.2")
 
-    implementation("dev.tiebe:magisterapi-jvm:1.1.13")
+    implementation("dev.tiebe:magisterapi-jvm:1.1.15")
 
     testImplementation("io.ktor:ktor-server-tests-jvm:2.3.7")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")

@@ -45,13 +45,13 @@ fun Routing.approveHoursRoute() {
                     return@post
                 }
 
-                if (approvedHour.presentType == PresenceType.PRESENT || approvedHour.approved){
+                if (approvedHour.presentType == PresenceType.PRESENT || approvedHour.state == State.APPROVED || approvedHour.state == State.PROCESSED){
                     call.respond(HttpStatusCode.Conflict)
                     return@post
                 }
 
                 transaction {
-                    approvedHour.approved = true
+                    approvedHour.state = State.APPROVED
                     approvedHour.approver = reqUser
                     approvedHour.timeApproved = Clock.System.now().epochSeconds
                 }

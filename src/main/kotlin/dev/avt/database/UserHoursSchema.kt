@@ -17,7 +17,7 @@ class UserHoursTable(id: EntityID<Int>): IntEntity(id) {
     var approver by AVTUser optionalReferencedOn  UserHoursService.UserHours.approver
     var timeApproved by UserHoursService.UserHours.timeApproved
     var presentType by UserHoursService.UserHours.PresentType
-    var approved by UserHoursService.UserHours.approved
+    var state by UserHoursService.UserHours.state
     var timeRequested by UserHoursService.UserHours.timeRequested
 }
 
@@ -29,7 +29,7 @@ class UserHoursService(database: Database) {
         val approver = reference("approver", UserService.Users).nullable()
         val timeApproved = long("time_approved").nullable()
         val PresentType = enumeration<PresenceType>("present_type")
-        val approved = bool("approved").default(false)
+        val state = enumeration("state", State::class).default(State.NONE)
         val timeRequested = long("time_requested")
     }
 
@@ -51,4 +51,10 @@ enum class PresenceType {
     ABSENCE,
     PRESENT,
     NOTHING
+}
+
+enum class State {
+    NONE,
+    APPROVED,
+    PROCESSED
 }

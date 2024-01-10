@@ -31,6 +31,7 @@ application {
 repositories {
     mavenCentral()
     mavenLocal()
+    maven { url = uri("https://jitpack.io") }
     maven("https://s01.oss.sonatype.org/content/repositories/releases/")
 }
 
@@ -56,6 +57,7 @@ dependencies {
     implementation("at.favre.lib:bcrypt:0.10.2")
 
     implementation("dev.tiebe:magisterapi-jvm:1.1.13")
+    implementation("io.ktor:ktor-client-apache:2.3.7")
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
@@ -63,4 +65,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
     implementation("org.eclipse.angus:angus-mail:2.0.2")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+
+    implementation("org.jsoup:jsoup:1.17.2")
+    implementation("com.github.librepdf:openpdf:1.3.36")
 }

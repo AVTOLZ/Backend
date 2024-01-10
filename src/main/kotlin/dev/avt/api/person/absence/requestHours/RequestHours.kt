@@ -31,28 +31,6 @@ fun Routing.requestHours(){
 
                 val requestedHour = transaction { AvailableHoursTable[body.hour] }
 
-                if (body.remove) {
-                    val removeHour = transaction {
-                        UserHoursTable.find {
-                            (UserHoursService.UserHours.user eq reqUser.id) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
-                        }.firstOrNull()
-                    }
-
-                    if (removeHour == null) {
-                        call.respond(HttpStatusCode.NotFound)
-                        return@post
-                    }
-
-                    if (removeHour.approved) {
-                        call.respond(HttpStatusCode.Conflict)
-                        return@post
-                    }
-
-                    transaction { removeHour.delete() }
-                    call.respond(HttpStatusCode.OK)
-                    return@post
-                }
-
                 val notNiceClientCheck = transaction {
                     UserHoursTable.find {
                         (UserHoursService.UserHours.user eq reqUser.id) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
@@ -99,6 +77,43 @@ fun Routing.requestHours(){
 
                 // TODO ask tiebe how to add shit to server.yaml
                 // note to self: I honestly fear testing and debugging this code for bugs :)
+            }
+
+            delete {
+                val reqUser = call.principal<AVTUser>()
+                val personId = call.parameters["personId"]?.toIntOrNull() ?: return@delete
+                val body = call.receive<RequestHoursRequest>()
+
+                if (reqUser == null) {
+                    call.respond(HttpStatusCode.Unauthorized)
+                    return@delete
+                }
+
+                if (reqUser.id.value != personId) {
+                    call.respond(HttpStatusCode.Forbidden)
+                    return@delete
+                }
+
+                val requestedHour = transaction { AvailableHoursTable[body.hour] }
+
+                val removeHour = transaction {
+                    UserHoursTable.find {
+                        (UserHoursService.UserHours.user eq reqUser.id) and (UserHoursService.UserHours.hour eq requestedHour.id.value)
+                    }.firstOrNull()
+                }
+
+                if (removeHour == null) {
+                    call.respond(HttpStatusCode.NotFound)
+                    return@delete
+                }
+
+                if (removeHour.approved) {
+                    call.respond(HttpStatusCode.Conflict)
+                    return@delete
+                }
+
+                transaction { removeHour.delete() }
+                call.respond(HttpStatusCode.OK)
             }
         }
     }

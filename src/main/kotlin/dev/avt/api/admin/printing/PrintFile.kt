@@ -8,6 +8,7 @@ import com.lowagie.text.pdf.PdfPTable
 import com.lowagie.text.pdf.PdfWriter
 import dev.avt.database.AVTRanks
 import dev.avt.database.AVTUser
+import dev.avt.database.State
 import dev.avt.database.UserHoursTable
 import dev.avt.dotEnv
 import io.ktor.http.*
@@ -39,7 +40,10 @@ fun Routing.printFile() {
 
                 transaction {
                     val absences = request.requests.map {
-                        UserHoursTable.findById(it)
+                        val item = UserHoursTable.findById(it)
+                        item?.state = State.PROCESSED
+
+                        item
                     }
 
                     absences.generatePDF(output)

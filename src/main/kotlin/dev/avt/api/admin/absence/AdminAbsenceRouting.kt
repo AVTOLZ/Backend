@@ -20,7 +20,7 @@ fun Routing.adminAbsenceRouting() {
     readRequestedHours()
     unapproveHoursRoute()
 
-    route("/api/admin/absences") {
+    route("/api/admin/hours") {
         authenticate("auth-bearer") {
             get {
                 val user = call.principal<AVTUser>()

@@ -1,6 +1,5 @@
 package dev.avt.api.admin.printing
 
-import dev.avt.dotEnv
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
 import io.ktor.client.plugins.cookies.*
@@ -13,8 +12,6 @@ import io.ktor.util.date.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.jsoup.Jsoup
-import java.io.File
-import java.io.InputStream
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.concurrent.atomic.AtomicLong
@@ -55,7 +52,7 @@ class Printer {
         return request.status == HttpStatusCode.Found
     }
 
-    suspend fun print(file: InputStream, bw: Boolean = true, duplex: Boolean = false) {
+    suspend fun print(file: ByteArray, fileName: String, bw: Boolean = true, duplex: Boolean = false) {
         val csrfRequest = httpClient.get("https://print.nuovo.eu/end-user/ui/login")
 
         val jsoup = Jsoup.parse(csrfRequest.bodyAsText())
@@ -66,8 +63,8 @@ class Printer {
             formData = formData {
                 append("bw", bw)
                 append("duplex", duplex)
-                append("importFile", file.readBytes(), Headers.build {
-                    append(HttpHeaders.ContentDisposition, "filename=upload.pdf")
+                append("importFile", file, Headers.build {
+                    append(HttpHeaders.ContentDisposition, "filename=${fileName}")
                 })
             }
         ) {
@@ -79,13 +76,6 @@ class Printer {
 
 
 }
-
-suspend fun main() {
-    val printer = Printer()
-    printer.login(dotEnv["PRINTER_ACCOUNT"], dotEnv["PRINTER_PASSWORD"])
-    printer.print(File("print.pdf").inputStream())
-}
-
 
 class TrustAllX509TrustManager : X509TrustManager {
     override fun getAcceptedIssuers(): Array<X509Certificate?> = arrayOfNulls(0)

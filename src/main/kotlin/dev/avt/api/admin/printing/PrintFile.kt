@@ -10,7 +10,6 @@ import dev.avt.database.AVTRanks
 import dev.avt.database.AVTUser
 import dev.avt.database.UserHoursTable
 import dev.avt.dotEnv
-import dev.avt.plugins.configureDatabases
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -19,7 +18,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.datetime.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.io.File
+import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import kotlin.math.max
 import kotlin.math.min
@@ -36,12 +35,21 @@ fun Routing.printFile() {
                 }
                 val request = call.receive<PrintRequest>()
 
-                val absences = transaction {
-                    request.requests.map {
+                val output = ByteArrayOutputStream()
+
+                transaction {
+                    val absences = request.requests.map {
                         UserHoursTable.findById(it)
                     }
+
+                    absences.generatePDF(output)
                 }
 
+                val printer = Printer()
+                printer.login(dotEnv["PRINTER_ACCOUNT"], dotEnv["PRINTER_PASSWORD"])
+                printer.print(output.toByteArray(), "absence.pdf")
+
+                call.respond(HttpStatusCode.OK)
             }
         }
     }
@@ -106,19 +114,6 @@ fun List<UserHoursTable?>.generatePDF(outputStream: OutputStream) {
 }
 
 
-fun main() {
-    configureDatabases()
-    val document = Document()
-
-    val file = File("test.pdf")
-
-    transaction {
-        val inputStream = UserHoursTable.all().toList().generatePDF(file.outputStream())
-    }
-
-    document.close()
-
-}
 fun generateTable(items: List<UserHoursTable>): PdfPTable {
     val userMap = mutableMapOf<AVTUser, MutableList<UserHoursTable>>()
     for (item in items) {

@@ -23,10 +23,10 @@ fun Routing.getEvents() {
                 }
 
                 val requestedHoursList = transaction {
-                    AvailableHoursTable.all()
+                    AvailableHoursTable.all().map { it.toEvent() }
                 }
 
-                call.respond(HttpStatusCode.OK, requestedHoursList.map { it.toEvent() })
+                call.respond(HttpStatusCode.OK, requestedHoursList)
             }
         }
     }

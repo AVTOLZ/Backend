@@ -27,8 +27,6 @@ fun Routing.readAvailabilityRoutes(){
                     return@get
                 }
 
-                val currentDate = Clock.System.now()
-
                 val remainingHours = transaction {
                     return@transaction AvailableHoursTable.all().toList()
                 }
@@ -43,13 +41,16 @@ fun Routing.readAvailabilityRoutes(){
                 val allowedHours: MutableList<HourDataFormat> = mutableListOf()
 
                 remainingHours.forEach {
-                    println(reqUser.rank)
-                    println(it.requiredRank)
-                    println(reqUser.rank.ge(it.requiredRank))
                     if (reqUser.rank.ge(it.requiredRank)) {
 
-
-                        allowedHours.add(HourDataFormat(it.id.value, it.startTime, it.endTime, checkPresentType(reqUser, it), checkHourApproved(reqUser, it)))
+                        allowedHours.add(HourDataFormat(
+                            it.id.value,
+                            it.startTime,
+                            it.endTime,
+                            it.title,
+                            it.description,
+                            checkPresentType(reqUser, it),
+                            checkHourApproved(reqUser, it)))
                     }
                 }
 

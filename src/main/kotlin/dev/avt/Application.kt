@@ -16,6 +16,16 @@ fun main() {
 }
 
 fun Application.module() {
+    install(CORS) {
+        anyHost()
+
+        allowMethod(HttpMethod.Options)
+        allowMethod(HttpMethod.Post)
+        allowMethod(HttpMethod.Get)
+        allowHeader(HttpHeaders.AccessControlAllowOrigin)
+        allowHeader(HttpHeaders.ContentType)
+    }
+
     configureSecurity()
     configureHTTP()
     configureMonitoring()
@@ -23,13 +33,4 @@ fun Application.module() {
     configureDatabases()
     configureSockets()
     configureRouting()
-
-    install(CORS) {
-        anyHost()
-
-        allowMethod(HttpMethod.Options)
-        allowMethod(HttpMethod.Put)
-        allowMethod(HttpMethod.Patch)
-        allowMethod(HttpMethod.Delete)
-    }
 }

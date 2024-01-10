@@ -1,6 +1,7 @@
 package dev.avt.api
 
 import dev.avt.api.accounts.accountRouting
+import dev.avt.api.admin.adminRouting
 import dev.avt.api.person.magister.magisterRouting
 import dev.avt.api.person.permissions.permissionRouting
 import dev.avt.api.person.personRouting
@@ -11,4 +12,5 @@ fun Routing.apiRouting() {
     magisterRouting()
     permissionRouting()
     personRouting()
+    adminRouting()
 }

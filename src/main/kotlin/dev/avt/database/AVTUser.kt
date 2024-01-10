@@ -1,6 +1,7 @@
 package dev.avt.database
 
 import io.ktor.server.auth.*
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -18,6 +19,7 @@ class AVTUser(id: EntityID<Int>) : IntEntity(id), Principal {
 }
 
 // this is currently mainly used for easily checking if a user is allowed to attend a certain thing based on rank
+@Serializable
 enum class AVTRanks(val order: Int) {
     Brugger(0),
     PlannenLid(1),

@@ -5,7 +5,8 @@ import dev.avt.database.AvailableHoursTable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Event(
+data class EventData(
+    val id: Int? = null,
     val requiredRank: AVTRanks,
     var startTime: Long,
     var endTime: Long,

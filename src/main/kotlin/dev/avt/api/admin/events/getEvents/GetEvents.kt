@@ -1,6 +1,6 @@
 package dev.avt.api.admin.events.getEvents
 
-import dev.avt.api.admin.events.getEvents.Event.Companion.toEvent
+import dev.avt.api.admin.events.Event.Companion.toEvent
 import dev.avt.database.AVTRanks
 import dev.avt.database.AVTUser
 import dev.avt.database.AvailableHoursTable

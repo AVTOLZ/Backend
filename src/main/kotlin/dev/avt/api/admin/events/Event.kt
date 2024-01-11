@@ -1,4 +1,4 @@
-package dev.avt.api.admin.events.getEvents
+package dev.avt.api.admin.events
 
 import dev.avt.database.AVTRanks
 import dev.avt.database.AvailableHoursTable
@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Event(
+    val id: Int? = null,
     val requiredRank: AVTRanks,
     var startTime: Long,
     var endTime: Long,
@@ -15,6 +16,7 @@ data class Event(
     companion object {
         fun AvailableHoursTable.toEvent(): Event {
             return Event(
+                this.id.value,
                 this.requiredRank,
                 this.startTime,
                 this.endTime,

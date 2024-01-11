@@ -44,7 +44,7 @@ fun Routing.denyHoursRoute() {
                     return@post
                 }
 
-                if (deniedHour.presentType != PresenceType.ABSENCE || deniedHour.approved) {
+                if (deniedHour.presentType != PresenceType.ABSENCE || deniedHour.state == State.APPROVED || deniedHour.state == State.PROCESSED) {
                     call.respond(HttpStatusCode.Conflict)
                     return@post
                 }

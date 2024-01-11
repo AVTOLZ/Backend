@@ -7,6 +7,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Routing.readRequestedHours() {
@@ -33,7 +34,7 @@ fun Routing.readRequestedHours() {
 
                 val requestedHoursList = transaction {
                     UserHoursTable.find {
-                        (UserHoursService.UserHours.PresentType eq PresenceType.ABSENCE) and (UserHoursService.UserHours.approved eq false)
+                        (UserHoursService.UserHours.PresentType eq PresenceType.ABSENCE) and ((UserHoursService.UserHours.state eq State.NONE) or (UserHoursService.UserHours.state eq State.APPROVED))
                     }.toList()
                 }
 

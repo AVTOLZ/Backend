@@ -51,6 +51,61 @@ fun Routing.events() {
                     }
                 }
             }
+
+            delete {
+                val user = call.principal<AVTUser>()
+
+                if (user?.rank != AVTRanks.Hoofd) {
+                    call.respond(HttpStatusCode.Forbidden)
+                    return@delete
+                }
+
+                val id = call.receive<Int>()
+
+                val hour = transaction { AvailableHoursTable.findById(id) }
+
+                if (hour == null) {
+                    call.respond(HttpStatusCode.NotFound)
+                    return@delete
+                }
+
+                transaction { hour.delete() }
+
+                call.respond(HttpStatusCode.OK)
+            }
+
+            put {
+                val user = call.principal<AVTUser>()
+
+                if (user?.rank != AVTRanks.Hoofd) {
+                    call.respond(HttpStatusCode.Forbidden)
+                    return@put
+                }
+
+                val body = call.receive<EventData>()
+
+                if (body.id == null) {
+                    call.respond(HttpStatusCode.BadRequest)
+                    return@put
+                }
+
+                val hour = transaction { AvailableHoursTable.findById(body.id) }
+
+                if (hour == null) {
+                    call.respond(HttpStatusCode.NotFound)
+                    return@put
+                }
+
+                transaction {
+                    hour.requiredRank = body.requiredRank
+                    hour.startTime = body.startTime
+                    hour.endTime = body.endTime
+                    hour.title = body.title
+                    hour.description = body.description
+                }
+
+                call.respond(HttpStatusCode.OK)
+            }
         }
     }
 }

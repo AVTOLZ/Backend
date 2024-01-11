@@ -48,7 +48,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
-    implementation("org.mariadb.jdbc:mariadb-java-client:3.2.0")
+    implementation("org.mariadb.jdbc:mariadb-java-client:3.3.2")
     implementation("io.ktor:ktor-server-websockets-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")

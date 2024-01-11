@@ -1,9 +1,6 @@
 package dev.avt.api.admin.absence.unapproveHours
 
-import dev.avt.database.AVTRanks
-import dev.avt.database.AVTUser
-import dev.avt.database.UserHoursService
-import dev.avt.database.UserHoursTable
+import dev.avt.database.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -47,13 +44,13 @@ fun Routing.unapproveHoursRoute() {
                     return@post
                 }
 
-                if (!unapprovedHour.approved){
+                if (unapprovedHour.state != State.APPROVED || unapprovedHour.state == State.PROCESSED){
                     call.respond(HttpStatusCode.Conflict)
                     return@post
                 }
 
                 transaction {
-                    unapprovedHour.approved = false
+                    unapprovedHour.state = State.NONE
                     unapprovedHour.approver = null
                     unapprovedHour.timeApproved = null
                 }

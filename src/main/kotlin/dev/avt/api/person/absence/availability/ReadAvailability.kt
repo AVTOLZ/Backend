@@ -6,7 +6,6 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -70,7 +69,7 @@ fun checkHourApproved(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): Bo
         UserHoursTable.find { (UserHoursService.UserHours.user eq reqUser.id.value) and (UserHoursService.UserHours.hour eq hourInQuestion.id.value) }.firstOrNull()
     } ?: return false
 
-    return userHourEntry.approved
+    return userHourEntry.state == State.APPROVED || userHourEntry.state == State.PROCESSED
 }
 
 fun checkPresentType(reqUser: AVTUser, hourInQuestion: AvailableHoursTable): PresenceType {

@@ -11,8 +11,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RequestedHourData(
-    val userId: PersonData,
-    val hourId: EventData,
+    val user: PersonData,
+    val hour: EventData,
     val approver: PersonData?,
     val timeApproved: Long?,
     val presenceType: PresenceType,

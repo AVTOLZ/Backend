@@ -50,6 +50,8 @@ fun Routing.events() {
                         this.description = body.description
                     }
                 }
+
+                call.respond(HttpStatusCode.OK)
             }
 
             delete {

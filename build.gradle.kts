@@ -49,20 +49,20 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
-    implementation("org.mariadb.jdbc:mariadb-java-client:3.2.0")
+    implementation("org.mariadb.jdbc:mariadb-java-client:3.3.2")
     implementation("io.ktor:ktor-server-websockets-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
     implementation("at.favre.lib:bcrypt:0.10.2")
 
-    implementation("dev.tiebe:magisterapi-jvm:1.1.13")
     implementation("io.ktor:ktor-client-apache:2.3.7")
+    implementation("dev.tiebe:magisterapi-jvm:1.1.15")
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
     implementation("org.eclipse.angus:angus-mail:2.0.2")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 

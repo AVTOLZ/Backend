@@ -9,6 +9,7 @@ import kotlinx.serialization.Serializable
 data class PersonData (
     val id: Int,
     val username: String,
+    val password: String?,
     val email: String?,
     val firstName: String?,
     val lastName: String?,
@@ -21,6 +22,7 @@ data class PersonData (
             return PersonData(
                 this.id.value,
                 this.userName,
+                null,
                 this.email,
                 this.firstName,
                 this.lastName,

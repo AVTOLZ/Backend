@@ -40,21 +40,9 @@ fun Routing.registerRoutes() {
                 this.email = body.email
                 this.firstName = body.firstName
                 this.lastName = body.lastName
+                this.studentId = body.studentId
             }
         }
-
-        verificationCodes[user.id.value] = String.format("%06d", Random.nextInt(999999));
-
-        Email.sendMail(body.email, "Welcome to AVT!", """
-            Hello ${user.firstName},
-            
-            Welcome to AVT!
-            
-            Your username is: ${user.userName}
-            
-            Please enter the following code to verify your account: ${verificationCodes[user.id.value]}
-        """.trimIndent())
-
 
         val bearer = transaction {
             user.createBearerToken()

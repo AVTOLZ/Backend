@@ -53,7 +53,7 @@ fun Routing.loginRoutes() {
 
         val user = transaction {
             AVTUser.find {
-                UserService.Users.studentId eq studyInfo.stamNr.toIntOrNull()
+                UserService.Users.studentId eq studyInfo.stamNr.toInt()
             }.firstOrNull()
         }
 

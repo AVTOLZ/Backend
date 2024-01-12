@@ -54,7 +54,7 @@ fun Routing.linkRouting() {
                             it[this.tenantUrl] = tenantUrl.toString()
                         }
 
-                        avtUser.studentId = studyInfo.stamNr.toIntOrNull()
+                        avtUser.studentId = studyInfo.stamNr.toInt()
                     }
 
                     call.respond(HttpStatusCode.OK)

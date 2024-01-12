@@ -141,7 +141,7 @@ fun generateTable(items: List<UserHoursTable>): PdfPTable {
 
     for ((user, registrations) in userMap) {
         table.addCell("${user.firstName} ${user.lastName}")
-        table.addCell(user.studentId?.toString() ?: "")
+        table.addCell(user.studentId.toString())
 
         val notedHours = BooleanArray(9) { false }
 

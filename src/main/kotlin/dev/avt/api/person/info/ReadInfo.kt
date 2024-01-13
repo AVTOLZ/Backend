@@ -24,7 +24,7 @@ fun Routing.readInfo() {
                     return@get
                 }
 
-                call.respond(ReadInfoResponse(reqUser.userName.toString(), reqUser.firstName.toString(), reqUser.lastName.toString(), reqUser.rank))
+                call.respond(ReadInfoResponse(reqUser.userName, reqUser.firstName.toString(), reqUser.lastName.toString(), reqUser.rank))
             }
         }
     }

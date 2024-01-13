@@ -17,13 +17,20 @@ fun main() {
 
 fun Application.module() {
     install(CORS) {
-        anyHost()
-
         allowMethod(HttpMethod.Options)
+        allowMethod(HttpMethod.Put)
+        allowMethod(HttpMethod.Patch)
+        allowMethod(HttpMethod.Delete)
         allowMethod(HttpMethod.Post)
         allowMethod(HttpMethod.Get)
+
         allowHeader(HttpHeaders.AccessControlAllowOrigin)
         allowHeader(HttpHeaders.ContentType)
+        allowHeader(HttpHeaders.Authorization)
+
+        allowCredentials = true
+
+        anyHost()
     }
 
     configureSecurity()

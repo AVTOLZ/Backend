@@ -63,4 +63,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
     implementation("org.eclipse.angus:angus-mail:2.0.2")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+
+    testImplementation("com.h2database:h2:$h2_version")
 }

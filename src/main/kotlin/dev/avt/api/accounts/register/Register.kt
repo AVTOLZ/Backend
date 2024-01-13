@@ -1,7 +1,6 @@
 package dev.avt.api.accounts.register
 
 import at.favre.lib.crypto.bcrypt.BCrypt
-import dev.avt.Email
 import dev.avt.api.accounts.login.LoginResponse
 import dev.avt.database.AVTUser
 import dev.avt.database.UserService
@@ -14,7 +13,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.transactions.transaction
-import kotlin.random.Random
 
 val verificationCodes = mutableMapOf<Int, String>()
 
@@ -41,6 +39,7 @@ fun Routing.registerRoutes() {
                 this.firstName = body.firstName
                 this.lastName = body.lastName
                 this.studentId = body.studentId
+                this.state = UserState.VERIFIED
             }
         }
 
@@ -48,6 +47,6 @@ fun Routing.registerRoutes() {
             user.createBearerToken()
         }
 
-        call.respond(HttpStatusCode.OK, LoginResponse(user.id.value, bearer, user.state == UserState.UNVERIFIED))
+        call.respond(HttpStatusCode.OK, LoginResponse(user.id.value, bearer, user.state == UserState.VERIFIED))
     }
 }

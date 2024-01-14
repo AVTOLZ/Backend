@@ -38,7 +38,7 @@ fun Routing.requestHours(){
                 }
 
                 if (notNiceClientCheck != null){
-                    if (notNiceClientCheck.approved) {
+                    if (notNiceClientCheck.state == State.PROCESSED) {
                         call.respond(HttpStatusCode.Conflict)
                         return@post
                     }
@@ -51,7 +51,7 @@ fun Routing.requestHours(){
                     if (notNiceClientCheck.presentType == PresenceType.PRESENT){
                         transaction {
                             notNiceClientCheck.presentType = PresenceType.ABSENCE
-                            notNiceClientCheck.approved = false
+                            notNiceClientCheck.state = State.NONE
                             notNiceClientCheck.approver = null
                             notNiceClientCheck.timeApproved = null
                             notNiceClientCheck.timeRequested = Clock.System.now().epochSeconds
@@ -107,7 +107,7 @@ fun Routing.requestHours(){
                     return@delete
                 }
 
-                if (removeHour.approved) {
+                if (removeHour.state == State.PROCESSED) {
                     call.respond(HttpStatusCode.Conflict)
                     return@delete
                 }

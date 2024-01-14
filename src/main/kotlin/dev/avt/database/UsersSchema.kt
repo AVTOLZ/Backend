@@ -21,7 +21,7 @@ class UserService(database: Database) {
         val email = varchar("email", 50).nullable()
         val firstName = varchar("first_name", 50).nullable()
         val lastName = varchar("last_name", 50).nullable()
-        val studentId = integer("student_id").nullable()
+        val studentId = integer("student_id")
         val rank = enumeration<AVTRanks>("user_rank").default(AVTRanks.Brugger)
         val state = enumeration<UserState>("state").default(UserState.UNVERIFIED)
     }

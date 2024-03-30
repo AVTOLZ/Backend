@@ -67,5 +67,5 @@ dependencies {
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 
     implementation("org.jsoup:jsoup:1.17.2")
-    implementation("com.github.librepdf:openpdf:1.3.36")
+    implementation("com.github.librepdf:openpdf:1.4.2")
 }

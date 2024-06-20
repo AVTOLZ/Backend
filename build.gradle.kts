@@ -56,7 +56,7 @@ dependencies {
 
     implementation("at.favre.lib:bcrypt:0.10.2")
 
-    implementation("io.ktor:ktor-client-apache:2.3.7")
+    implementation("io.ktor:ktor-client-apache:2.3.12")
     implementation("dev.tiebe:magisterapi-jvm:1.1.15")
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")

@@ -64,7 +64,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
     implementation("org.eclipse.angus:angus-mail:2.0.2")
-    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.5.1")
 
     implementation("org.jsoup:jsoup:1.17.2")
     implementation("com.github.librepdf:openpdf:1.3.36")
